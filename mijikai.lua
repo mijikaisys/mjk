@@ -113,7 +113,7 @@ ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
         local hit_effect = game:GetObjects("rbxassetid://17407244385")[1]
         hit_effect.Parent = VenoX_Util.getBall()
         hit_effect:Emit(3)
-        task.delay(5, function()
+        task.delay(2, function()
             hit_effect:Destroy()
         end)
     end
@@ -121,7 +121,7 @@ end)
 
 ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
     aura_table.hit_Count += 1
-    task.delay(0.15, function()
+    task.delay(0.050, function()
         aura_table.hit_Count -= 1
     end)
 end)
