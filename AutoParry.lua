@@ -11,69 +11,10 @@ local parry_remote = nil
 -- Paramètres par défaut
 getgenv().aura_Enabled = false
 getgenv().AutoParry = true
-getgenv().DistanceToParry = 0.4350 -- Distance par défaut
+getgenv().DistanceToParry = 0.4201 -- Distance par défaut
 
--- Création de l'UI
-local screenGui = Instance.new("ScreenGui")
-local frame = Instance.new("Frame")
-local toggleButton = Instance.new("TextButton")
-local distanceInput = Instance.new("TextBox")
-
-screenGui.Parent = c:WaitForChild("PlayerGui")
-frame.Size = UDim2.new(0, 200, 0, 100)
-frame.Position = UDim2.new(1, -200, 1, -110)
-frame.BackgroundColor3 = Color3.new(1, 1, 1)
-frame.Parent = screenGui
-
-toggleButton.Size = UDim2.new(1, 0, 0, 50)
-toggleButton.Position = UDim2.new(0, 0, 0, 0)
-toggleButton.Text = "Activer Autoparry"
-toggleButton.Parent = frame
-
-distanceInput.Size = UDim2.new(1, 0, 0, 50)
-distanceInput.Position = UDim2.new(0, 0, 0, 50)
-distanceInput.PlaceholderText = "Distance"
-distanceInput.Text = tostring(getgenv().DistanceToParry)
-distanceInput.Parent = frame
-
-toggleButton.MouseButton1Click:Connect(function()
-    getgenv().AutoParry = not getgenv().AutoParry
-    toggleButton.Text = getgenv().AutoParry and "Désactiver Autoparry" or "Activer Autoparry"
-end)
-
-distanceInput.FocusLost:Connect(function(enterPressed)
-    if enterPressed then
-        local newDistance = tonumber(distanceInput.Text)
-        if newDistance then
-            getgenv().DistanceToParry = newDistance
-        end
-    end
-end)
-
--- Fonction pour rendre l'UI déplaçable
-local dragging = false
-local dragStart = nil
-local startPos = nil
-
-frame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = frame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-frame.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
-        local delta = input.Position - dragStart
-        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
+-- Variable pour contrôler l'état du clic
+local isClicking = false 
 
 -- Fonction pour trouver la balle
 local function FindBall()
@@ -97,8 +38,6 @@ local function resolve_parry_Remote()
         end
     end
 end
-
-local isClicking = false -- Variable pour contrôler l'état du clic
 
 spawn(function()
     b.PreRender:Connect(function()
@@ -136,6 +75,7 @@ spawn(function()
 end)
 
 initialize("venox_temp")
+resolve_parry_Remote()
 
 -- Événements de succès de parry
 ReplicatedStorage.Remotes.ParrySuccess.OnClientEvent:Connect(function()
