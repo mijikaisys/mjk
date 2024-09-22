@@ -21,7 +21,7 @@ local distanceInput = Instance.new("TextBox")
 
 screenGui.Parent = c:WaitForChild("PlayerGui")
 frame.Size = UDim2.new(0, 200, 0, 100)
-frame.Position = UDim2.new(1, -220, 1, -120)
+frame.Position = UDim2.new(1, -200, 1, -110)
 frame.BackgroundColor3 = Color3.new(1, 1, 1)
 frame.Parent = screenGui
 
