@@ -32,7 +32,6 @@ end
 
 
 
-local Something = GetHttp("https://raw.githubusercontent.com/Mana42138/woof-gui/main/Source.lua")
 
 
 
@@ -74,7 +73,7 @@ end)
 
 
 
-Ragebot:Slider("Slash Base Distance", 0, 100, 0, function(t)
+Ragebot:Slider("Slash Base Distance", 0, 80, 0, function(t)
 
     BaseDistance = t
 
@@ -314,7 +313,7 @@ spawn(function()
 
                         if part and speed then
 
-                            local minDistance = 2.5 * (speed * 0.1)
+                            local minDistance = 2 * (speed * 0.1)
 
                             if minDistance == 0 or minDistance <= 20 then
 
