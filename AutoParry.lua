@@ -11,7 +11,7 @@ local parry_remote = nil
 -- Paramètres par défaut
 getgenv().aura_Enabled = false
 getgenv().AutoParry = true
-getgenv().DistanceToParry = 0.4201 -- Distance par défaut
+getgenv().DistanceToParry = 0.3969 -- Distance par défaut
 
 -- Variable pour contrôler l'état du clic
 local isClicking = false 
