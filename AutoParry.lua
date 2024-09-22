@@ -29,7 +29,7 @@ local parry_remote = nil
 
 getgenv().Fsploit = {
     ["AutoParry"] = true, -- must be true
-    ["PingBased"] = true, -- can be true (optional)
+    ["PingBased"] = false, -- can be true (optional)
     ["PingBasedOffset"] = 0, -- (optional)
     ["DistanceToParry"] = 0.2759, -- parry Range
     ["BallSpeedCheck"] = true, -- do not mess with this 
