@@ -1,4 +1,4 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/UwU%20pt2.lua'))()
 
 local runService = game:GetService("RunService")
 local workspace = game:GetService("Workspace")
