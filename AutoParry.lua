@@ -11,7 +11,7 @@ local parry_remote = nil
 -- Paramètres par défaut
 getgenv().aura_Enabled = true 
 getgenv().AutoParry = true
-getgenv().DistanceToParry = 0.3809 -- Distance par défaut
+getgenv().DistanceToParry = 0.4355 -- Distance par défaut
 
 
 frame.InputChanged:Connect(function(input)
