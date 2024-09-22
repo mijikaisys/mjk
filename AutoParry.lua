@@ -28,7 +28,7 @@ spawn(function()
             local o = l - 5
             local p = o / n
 
-            if d.IsPlayerTarget(g) and p <= 0.35 and not e then
+            if d.IsPlayerTarget(g) and p <= 0.40 and not e then
                 a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                 wait(0.01)
                 e = true
