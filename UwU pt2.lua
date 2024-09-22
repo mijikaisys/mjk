@@ -155,7 +155,7 @@ local Elements = Main.Elements
 local LoadingFrame = Main.LoadingFrame
 local TabList = Main.TabList
 
-Rayfield.DisplayOrder = 100
+Rayfield.DisplayOrder = 75
 LoadingFrame.Version.Text = Release
 
 
