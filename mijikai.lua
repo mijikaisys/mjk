@@ -31,13 +31,13 @@ getgenv().Fsploit = {
     ["AutoParry"] = true, -- must be true
     ["PingBased"] = true, -- can be true (optional)
     ["PingBasedOffset"] = 0, -- (optional)
-    ["DistanceToParry"] = 0.3, -- parry Range
+    ["DistanceToParry"] = 0.205, -- parry Range
     ["BallSpeedCheck"] = true, -- do not mess with this 
 }
 
 --[[ functions ]]--
 
-getgenv().aura_Enabled = false
+getgenv().aura_Enabled = true 
 getgenv().hit_sound_Enabled = false
 getgenv().hit_effect_Enabled = false
 getgenv().night_mode_Enabled = true
@@ -49,7 +49,7 @@ local aura_table = {
     canParry = true,
     is_Spamming = false,
     parry_Range = 0,
-    spam_Range = 0,
+    spam_Range = 1,
     hit_Count = 0,
     hit_Time = tick(),
     ball_Warping = tick(),
@@ -199,7 +199,7 @@ task.spawn(function()
             if workspace.Alive:FindFirstChild(closest_Entity.Name) and workspace.Alive:FindFirstChild(closest_Entity.Name).Humanoid.Health > 0 then
                 if aura_table.is_Spamming then
                     if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura_table.spam_Range then
-                        parry_remote:FireServer(0.5, CFrame.new(camera.CFrame.Position, camera.CFrame.Position + (camera.CFrame.LookVector * 100)), {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position}, {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y}, false)
+                        parry_remote:FireServer(0.050, CFrame.new(camera.CFrame.Position, camera.CFrame.Position + (camera.CFrame.LookVector * 100)), {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position}, {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y}, false)
                     end
                 end
             end
