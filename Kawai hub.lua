@@ -34,16 +34,16 @@ if workspace:FindFirstChild("AbilityThingyk1212") then
 end
 
 local Window = Rayfield:CreateWindow({
-   Name = "Blade Ball",
-   LoadingTitle = "Blade Ball",
-   LoadingSubtitle = "by SadlekAski",
+   Name = "Kawai hub",
+   LoadingTitle = "Kawai hub",
+   LoadingSubtitle = "by Asuna_0nO",
    ConfigurationSaving = {
       Enabled = true,
       FolderName = "BladeBallerlol",
       FileName = "Configuration"
    },
    Discord = {
-      Enabled = true,
+      Enabled = false,
       Invite = "hNX8VxcjMF",
       RememberJoins = true
    },
@@ -223,7 +223,7 @@ end
 local AutoParrySection = AutoParry:CreateSection("Auto Parry")
 
 local AutoParryToggle = AutoParry:CreateToggle({
-    Name = "Auto Parry",
+    Name = "Auto Parry très nul tkt",
     CurrentValue = false,
     Flag = "AutoParryFlag",
     Callback = function(Value)
@@ -237,7 +237,7 @@ local AutoParryToggle = AutoParry:CreateToggle({
 
 
 local AutoRagingDeflect = AutoParry:CreateToggle({
-    Name = "Auto Rage Parry (MUST EQUIP RAGING DEFLECT)",
+    Name = "Auto Rage Parry (avec raging deflect)",
     CurrentValue = false,
     Flag = "AutoRagingDeflectFlag",
     Callback = function(Value)
