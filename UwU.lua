@@ -37,7 +37,7 @@ end
 
 
 
-local Win = loadstring(Something)():Window("Project Meow", "Blade Ball")
+local Win = loadstring(Something)():Window("mijikai", "Blade Ball")
 
 local Ragebot = Win:Tab("Ragebot")
 
