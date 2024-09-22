@@ -11,7 +11,7 @@ local parry_remote = nil
 -- Paramètres par défaut
 getgenv().aura_Enabled = false
 getgenv().AutoParry = true
-getgenv().DistanceToParry = 0.47 -- Distance par défaut
+getgenv().DistanceToParry = 0.4350 -- Distance par défaut
 
 -- Création de l'UI
 local screenGui = Instance.new("ScreenGui")
