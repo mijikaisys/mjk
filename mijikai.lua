@@ -31,7 +31,7 @@ getgenv().Fsploit = {
     ["AutoParry"] = true, -- must be true
     ["PingBased"] = true, -- can be true (optional)
     ["PingBasedOffset"] = 0, -- (optional)
-    ["DistanceToParry"] = 0.205, -- parry Range
+    ["DistanceToParry"] = 0.250, -- parry Range
     ["BallSpeedCheck"] = true, -- do not mess with this 
 }
 
@@ -47,9 +47,9 @@ getgenv().self_effect_Enabled = false
 local FsploitTable = getgenv().Fsploit
 local aura_table = {
     canParry = true,
-    is_Spamming = false,
+    is_Spamming = true,
     parry_Range = 0,
-    spam_Range = 1,
+    spam_Range = 3,
     hit_Count = 0,
     hit_Time = tick(),
     ball_Warping = tick(),
