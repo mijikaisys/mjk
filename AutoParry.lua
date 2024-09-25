@@ -10,7 +10,7 @@ end)
 
 
 ]]--
-
+loadstring(game:HttpGet("https://rawscripts.net/raw/UPD-Blade-Ball-Open-Source-Manual-Spam-15831"))()
 local Stats = game:GetService("Stats")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
