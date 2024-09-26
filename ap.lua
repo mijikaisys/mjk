@@ -62,7 +62,7 @@ getgenv().Fsploit = {
     ["AutoParry"] = true, -- must be true
     ["PingBased"] = false, -- can be true (optional)
     ["PingBasedOffset"] = 0, -- (optional)
-    ["DistanceToParry"] = 0.2759, -- parry Range
+    ["DistanceToParry"] = 0.30, -- parry Range
     ["BallSpeedCheck"] = true, -- do not mess with this 
 }
 
@@ -127,7 +127,7 @@ getgenv().Fsploit = {
     ["AutoParry"] = true, -- must be true
     ["PingBased"] = false, -- can be true (optional)
     ["PingBasedOffset"] = 0, -- (optional)
-    ["DistanceToParry"] = 0.2759, -- parry Range
+    ["DistanceToParry"] = 0.30, -- parry Range
     ["BallSpeedCheck"] = true, -- do not mess with this 
 }
 
