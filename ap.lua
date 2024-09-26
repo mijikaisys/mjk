@@ -60,9 +60,9 @@ local parry_remote = nil
 
 getgenv().Fsploit = {
     ["AutoParry"] = true, -- must be true
-    ["PingBased"] = false, -- can be true (optional)
+    ["PingBased"] = true, -- can be true (optional)
     ["PingBasedOffset"] = 0, -- (optional)
-    ["DistanceToParry"] = 0.30, -- parry Range
+    ["DistanceToParry"] = 0.33, -- parry Range
     ["BallSpeedCheck"] = true, -- do not mess with this 
 }
 
@@ -121,15 +121,7 @@ local hit_Sound = nil
 local closest_Entity = nil
 local parry_remote = nil
 
---[[ Parry settings ]]--
 
-getgenv().Fsploit = {
-    ["AutoParry"] = true, -- must be true
-    ["PingBased"] = false, -- can be true (optional)
-    ["PingBasedOffset"] = 0, -- (optional)
-    ["DistanceToParry"] = 0.30, -- parry Range
-    ["BallSpeedCheck"] = true, -- do not mess with this 
-}
 
 --[[ functions ]]--
 
