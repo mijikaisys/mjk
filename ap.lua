@@ -118,6 +118,16 @@ getgenv().night_mode_Enabled = false
 getgenv().trail_Enabled = false
 getgenv().self_effect_Enabled = false
 
+--[[ Parry settings ]]--
+
+getgenv().Fsploit = {
+    ["AutoParry"] = true, -- must be true
+    ["PingBased"] = false, -- can be true (optional)
+    ["PingBasedOffset"] = 0, -- (optional)
+    ["DistanceToParry"] = 0.40, -- parry Range
+    ["BallSpeedCheck"] = true, -- do not mess with this 
+}
+
 local FsploitTable = getgenv().Fsploit
 local aura_table = {
     canParry = true,
