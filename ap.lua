@@ -1,12 +1,10 @@
---[[ for toggle buttons value to make it work.
+--for toggle buttons value to make it work.
 
 Section:CreateToggle("Auto Parry", function(toggled) -- must be the same value as the toggles below
     resolve_parry_Remote()
     getgenv().aura_Enabled = toggled -- the value to make the parry work
     print(toggled) -- optional
 end)
-
-]]--
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
@@ -94,18 +92,6 @@ local function initialize(dataFolder_name)
     hit_Sound.Volume = 5
 end
 
---[[ for toggle buttons value to make it work.
-
-Section:CreateToggle("Auto Parry", function(toggled) -- must be the same value as the toggles below
-
-              resolve_parry_Remote()
-        getgenv().aura_Enabled = toggled -- the value to make the parry work
-
-print(toggled) -- optional
-end)
-
-
-]]--
 
 local Stats = game:GetService("Stats")
 local Players = game:GetService("Players")
