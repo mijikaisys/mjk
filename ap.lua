@@ -43,7 +43,7 @@ b.MouseButton1Click:Connect(function()
     b.Text = t and "UwU" or "UnU"
     while t do
         VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-         -- Tu peux supprimer ce wait() si tu veux des clics instantanés
+        Wait() -- Tu peux supprimer ce wait() si tu veux des clics instantanés
     end
 end)
 
