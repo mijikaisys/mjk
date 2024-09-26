@@ -1,4 +1,4 @@
---for toggle buttons value to make it work.
+--[[for toggle buttons value to make it work.
 
 Section:CreateToggle("Auto Parry", function(toggled) -- must be the same value as the toggles below
     resolve_parry_Remote()
@@ -8,7 +8,7 @@ end)
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
-end
+end]]--
 
 local Stats = game:GetService("Stats")
 local Players = game:GetService("Players")
