@@ -24,12 +24,12 @@ s.Parent = game.CoreGui
 
 local b = Instance.new("TextButton")
 b.Size = UDim2.new(0, 200, 0, 50)
-b.Position = UDim2.new(0.5, -100, 0.5, -25)
+b.Position = UDim2.new(0.5, -200, 0.5, -50)
 b.AnchorPoint = Vector2.new(0.5, 0.5)
 b.BackgroundColor3 = Color3.new(0, 0, 0)
 b.BorderSizePixel = 2
 b.BorderColor3 = Color3.new(1, 1, 1)
-b.Text = "MANUAL SPAM"
+b.Text = "Mode UwU"
 b.TextColor3 = Color3.new(1, 1, 1)
 b.TextScaled = true
 b.Font = Enum.Font.LuckiestGuy
@@ -40,7 +40,7 @@ b.Parent = s
 local t = false
 b.MouseButton1Click:Connect(function()
     t = not t
-    b.Text = t and "ON" or "OFF"
+    b.Text = t and "UwU" or "UnU"
     while t do
         VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
         wait() -- Tu peux supprimer ce wait() si tu veux des clics instantanés
@@ -78,7 +78,7 @@ getgenv().self_effect_Enabled = false
 local FsploitTable = getgenv().Fsploit
 local aura_table = {
     canParry = true,
-    parry_Range = 0,
+    parry_Range = 0.3,
     hit_Count = 0,
     hit_Time = tick(),
     ball_Warping = tick(),
@@ -143,7 +143,7 @@ getgenv().self_effect_Enabled = false
 local FsploitTable = getgenv().Fsploit
 local aura_table = {
     canParry = true,
-    parry_Range = 0,
+    parry_Range = 0.3,
     hit_Count = 0,
     hit_Time = tick(),
     ball_Warping = tick(),
@@ -287,16 +287,6 @@ task.spawn(function()
         if (Distance / BallVelocity) <= FsploitTable.DistanceToParry and IsTheTarget() and FsploitTable.AutoParry then
             VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
             VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0)
-        end
-
-        if getgenv().aura_Enabled and closest_Entity then
-            if workspace.Alive:FindFirstChild(closest_Entity.Name) and workspace.Alive:FindFirstChild(closest_Entity.Name).Humanoid.Health > 0 then
-                if aura_table.is_Spamming then
-                    if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura_table.spam_Range then
-                        parry_remote:FireServer(0.5, CFrame.new(camera.CFrame.Position, camera.CFrame.Position + (camera.CFrame.LookVector * 100)), {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position}, {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y}, false)
-                    end
-                end
-            end
         end
     end)
 end)
