@@ -37,7 +37,7 @@ Tab:AddButton({
 	Name = "Auto Parry + Visualizer",
 	Callback = function()
 			
-			loadstring(game:HttpGet("https://scriptblox.com/raw/UPD-Blade-Ball-op-autoparry-with-visualizer-8652"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/AutoParry.lua"))()
   	end    
 })
 
