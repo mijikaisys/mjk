@@ -72,12 +72,6 @@ NiceTab:AddButton({
   	end    
 })
 
-NiceTab:AddButton({
-	Name = "Auto Spam (fonctionne)",
-	Callback = function()
-      		print("Auto Spam (fonctionne)")
-  	end    
-})	
 
 --[[local NowTab = Window:MakeTab({
 	Name = "Official Links",
