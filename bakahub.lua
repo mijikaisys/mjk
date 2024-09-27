@@ -9,7 +9,7 @@ local Player = game.Players.LocalPlayer
 })
 
 function MakeScriptHub()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/SubToNeon/bxnks-hub-by-neoncat/main/beta.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/Baka%20Hub.lua"))()
 end
 
 OrionLib:MakeNotification({
