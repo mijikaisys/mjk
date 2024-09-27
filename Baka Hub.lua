@@ -34,7 +34,7 @@ OrionLib:MakeNotification({
 })
 
 Tab:AddButton({
-	Name = "Auto Parry + Visualizer",
+	Name = "Auto Parry",
 	Callback = function()
 			
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/AutoParry.lua"))()
