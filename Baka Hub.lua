@@ -3,7 +3,7 @@ local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shl
 local Window = OrionLib:MakeWindow({Name = "Baka Hub BETA", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
 local Tab = Window:MakeTab({
-	Name = "Main",
+	Name = "Baka",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
@@ -13,21 +13,21 @@ local Section = Tab:AddSection({
 })
 
 OrionLib:MakeNotification({
-	Name = "Thanks",
-	Content = "Thanks For Using The BETA Version!",
+	Name = "Merci ^^",
+	Content = "Merci d'utiliser la version BETA!!! UwU",
 	Image = "rbxassetid://4483345998",
 	Time = 5
 })
 
 OrionLib:MakeNotification({
-	Name = "Coming Soon...",
-	Content = "More Futures Coming Soon!",
+	Name = "Bientôt...",
+	Content = "Il y aura bientôt plus de choses!",
 	Image = "rbxassetid://4483345998",
 	Time = 5
 })
 
 OrionLib:MakeNotification({
-	Name = "Creator",
+	Name = "Créatrice",
 	Content = "Made by Asuna_0nO",
 	Image = "rbxassetid://4483345998",
 	Time = 5
@@ -50,16 +50,16 @@ Tab:AddButton({
 })
 
 Tab:AddButton({
-	Name = "More Futures Coming Soon!",
+	Name = "Il y aura bientôt plus de choses!",
 	Callback = function()
-      		print("More Futures Coming Soon!")
+      		print("Il y aura bientôt plus de choses!")
   	end    
 })
 
 Tab:AddButton({
-	Name = "Sript Made By Asuna_0nO",
+	Name = "Sript fait par Asuna_0nO",
 	Callback = function()
-      		print("Sript Made By Asuna_0nO")
+      		print("Sript fait par Asuna_0nO")
   	end    
 })
 
@@ -74,20 +74,20 @@ local NiceSection = NiceTab:AddSection({
 })
 
 NiceTab:AddButton({
-	Name = "Auto Parry + Visualizer (WORKING)",
+	Name = "Auto Parry (fonctionne)",
 	Callback = function()
-      		print("Auto Parry + Visualizer (WORKING)")
+      		print("Auto Parry (fonctionne)")
   	end    
 })
 
 NiceTab:AddButton({
-	Name = "Auto Spam (WORKING)",
+	Name = "Auto Spam (fonctionne)",
 	Callback = function()
-      		print("Auto Spam (WORKING)")
+      		print("Auto Spam (fonctionne)")
   	end    
 })	
 
-local NowTab = Window:MakeTab({
+--[[local NowTab = Window:MakeTab({
 	Name = "Official Links",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
@@ -124,3 +124,4 @@ NowTab:AddButton({
       		setclipboard("https://youtube.com/@bxnksscripts?si=plzEJJC2HaajFSL7") --This Will Copy The Link Of The Key
   	end    
 })
+]]--
