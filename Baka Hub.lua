@@ -42,14 +42,6 @@ Tab:AddButton({
 })
 
 Tab:AddButton({
-	Name = "Auto Spam",
-	Callback = function()
-      		
-			loadstring(game:HttpGet("https://pastebin.com/raw/t2391h1A"))()
-  	end    
-})
-
-Tab:AddButton({
 	Name = "Il y aura bientôt plus de choses!",
 	Callback = function()
       		print("Il y aura bientôt plus de choses!")
