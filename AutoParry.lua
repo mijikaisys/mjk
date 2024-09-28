@@ -32,7 +32,7 @@ Balls.ChildAdded:Connect(function(Ball)
             local Distance = (Ball.Position - workspace.CurrentCamera.Focus.Position).Magnitude
             local Velocity = (OldPosition - Ball.Position).Magnitude
 
-            if (Distance / Velocity) <= 8 then
+            if (Distance / Velocity) <= 15 then
                 Parry()
             end
         end
