@@ -41,7 +41,7 @@ Tab:AddButton({
   	end    
 })
 
- tab:AddButton({
+Tab:AddButton({
     Name = "Spam parry(Autoclick for close Range)",
     Callback = function()
       while true do
@@ -57,6 +57,7 @@ Tab:AddButton({
 				end
 			end
 })
+
 Tab:AddButton({
 	Name = "Il y aura bientôt plus de choses!",
 	Callback = function()
