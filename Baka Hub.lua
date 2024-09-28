@@ -36,7 +36,7 @@ OrionLib:MakeNotification({
 Tab:AddButton({
 	Name = "Auto Parry",
 	Callback = function()
-			
+
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/AutoParry.lua"))()
   	end    
 })
@@ -72,38 +72,39 @@ NiceTab:AddButton({
   	end    
 })
 
+NiceTab:AddButton({
+	Name = "Auto Spam (fonctionne)",
+	Callback = function()
+      		print("Auto Spam (fonctionne)")
+  	end    
+})	
 
 --[[local NowTab = Window:MakeTab({
 	Name = "Official Links",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
-
 local NowSection = NowTab:AddSection({
 	Name = "OFFICIAL LINKS"
 })
-
 NowTab:AddButton({
 	Name = "Copy PasteDrop Link",
 	Callback = function()
       		setclipboard("https://paste-drop.com") --This Will Copy The Link Of The Key
   	end    
 })
-
 NowTab:AddButton({
 	Name = "Copy Twitter/X Link",
 	Callback = function()
       		setclipboard("https://x.com/ThePasteDrop") --This Will Copy The Link Of The Key
   	end    
 })
-
 NowTab:AddButton({
 	Name = "Copy YouTube Link",
 	Callback = function()
       		setclipboard("www.youtube.com/@pastedrop") --This Will Copy The Link Of The Key
   	end    
 })
-
 NowTab:AddButton({
 	Name = "Copy YouTube Link 2",
 	Callback = function()
