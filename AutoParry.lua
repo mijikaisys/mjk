@@ -26,7 +26,7 @@ Balls.ChildAdded:Connect(function(Ball)
 
     local OldPosition = Ball.Position
     local OldTick = tick()
-    local MaxDistance = 14 -- Distance maximale pour parer
+    local MaxDistance = 15 -- Distance maximale pour parer
 
     Ball:GetPropertyChangedSignal("Position"):Connect(function()
         if IsTarget() then
