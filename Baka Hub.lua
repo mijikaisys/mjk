@@ -42,6 +42,14 @@ Tab:AddButton({
 })
 
 Tab:AddButton({
+	Name = "Auto Spam",
+	Callback = function()
+
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/auto%20spam.lua"))()
+  	end    
+})
+
+Tab:AddButton({
 	Name = "Il y aura bientôt plus de choses!",
 	Callback = function()
       		print("Il y aura bientôt plus de choses!")
