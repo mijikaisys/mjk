@@ -38,7 +38,7 @@ Balls.ChildAdded:Connect(function(Ball)
                     end
         end
 
-        if (tick() - OldTick >= 1/6) then
+        if (tick() - OldTick >= 1/60) then
             OldTick = tick()
             OldPosition = Ball.Position
         end
