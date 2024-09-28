@@ -26,19 +26,19 @@ Balls.ChildAdded:Connect(function(Ball)
 
     local OldPosition = Ball.Position
     local OldTick = tick()
-    local MaxDistance = 17 -- Distance maximale pour parer
+    local MaxDistance = 20 -- Distance maximale pour parer
 
     Ball:GetPropertyChangedSignal("Position"):Connect(function()
         if IsTarget() then
             local Distance = (Ball.Position - workspace.CurrentCamera.Focus.Position).Magnitude
             local Velocity = (OldPosition - Ball.Position).Magnitude
 
-            if (Distance <= MaxDistance) and ((Distance / Velocity) <= 11.5) then
+            if (Distance <= MaxDistance) and ((Distance / Velocity) <= 14) then
                         Parry()
                     end
         end
 
-        if (tick() - OldTick >= 1/30) then
+        if (tick() - OldTick >= 1/6) then
             OldTick = tick()
             OldPosition = Ball.Position
         end
