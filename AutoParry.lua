@@ -29,7 +29,7 @@ local parry_remote = nil
 
 getgenv().Fsploit = {
     ["AutoParry"] = true, -- must be true
-    ["PingBased"] = false, -- can be true (optional)
+    ["PingBased"] = true, -- can be true (optional)
     ["PingBasedOffset"] = 0, -- (optional)
     ["DistanceToParry"] = 0.38080001, -- parry Range
     ["BallSpeedCheck"] = true, -- do not mess with this 
@@ -119,7 +119,7 @@ end)
 
 ReplicatedStorage.Remotes.ParrySuccessAll.OnClientEvent:Connect(function()
     aura_table.hit_Count += 1
-    task.delay(0.15, function()
+    task.delay(0.9, function()
         aura_table.hit_Count -= 1
     end)
 end)
@@ -197,7 +197,7 @@ task.spawn(function()
             if workspace.Alive:FindFirstChild(closest_Entity.Name) and workspace.Alive:FindFirstChild(closest_Entity.Name).Humanoid.Health > 0 then
                 if aura_table.is_Spamming then
                     if local_player:DistanceFromCharacter(closest_Entity.HumanoidRootPart.Position) <= aura_table.spam_Range then
-                        parry_remote:FireServer(0.5, CFrame.new(camera.CFrame.Position, camera.CFrame.Position + (camera.CFrame.LookVector * 100)), {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position}, {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y}, false)
+                        parry_remote:FireServer(0.9, CFrame.new(camera.CFrame.Position, camera.CFrame.Position + (camera.CFrame.LookVector * 100)), {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position}, {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y}, false)
                     end
                 end
             end
