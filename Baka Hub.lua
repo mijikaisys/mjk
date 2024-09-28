@@ -54,7 +54,7 @@ Tab:AddButton({
          if dist <= balldist and hum:FindFirstChild("Highlight") then
          keypress(0x46)
          end
-				end			
+			
 Tab:AddButton({
 	Name = "Il y aura bientôt plus de choses!",
 	Callback = function()
