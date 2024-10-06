@@ -9,7 +9,7 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local ero = false
 
 -- Rayon de détection
-local detectionRadius = 15
+local detectionRadius = 22
 
 task.spawn(function()
     -- Création d'un cercle de détection
