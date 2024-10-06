@@ -47,7 +47,7 @@ task.spawn(function()
         local maxDetectionRadius = velocity 
 
         -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
-        local adjustedBaseDetectionRadius = math.clamp(20 + (velocity * 0.5), 20, maxDetectionRadius) 
+        local adjustedBaseDetectionRadius = math.clamp(12 + (velocity * 0.5), 12, maxDetectionRadius) 
 
         -- Vérifier si la cible est dans la sphère
         if distance <= adjustedBaseDetectionRadius then
