@@ -9,7 +9,7 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local ero = false
 
 -- Rayon de détection de base
-local baseDetectionRadius = 20
+local baseDetectionRadius = 20  -- Augmenté pour une sphère de départ plus grande
 
 task.spawn(function()
     -- Création d'une sphère de détection
@@ -47,12 +47,12 @@ task.spawn(function()
         local maxDetectionRadius = velocity 
 
         -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
-        local adjustedBaseDetectionRadius = math.clamp(12 + (velocity * 0.5), 12, maxDetectionRadius) 
+        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
         -- Vérifier si la cible est dans la sphère
         if distance <= adjustedBaseDetectionRadius then
             -- Si le joueur est visé, ajuster la taille de la sphère
-            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.5), 5, adjustedBaseDetectionRadius) -- Taille minimale de 5
+            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius) -- Facteur de réduction ajusté
             spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
 
             local hat = par.AssemblyLinearVelocity
@@ -71,7 +71,7 @@ task.spawn(function()
                 local o = l - 5
                 local p = o / n
 
-                if parry_helper.IsPlayerTarget(par) and p <= 0.55 and not ero then
+                if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
                     -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait(0.01)
