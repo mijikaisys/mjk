@@ -9,7 +9,7 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local ero = false
 
 -- Rayon de détection de base
-local baseDetectionRadius = 10 
+local baseDetectionRadius = 20
 
 task.spawn(function()
     -- Création d'une sphère de détection
@@ -47,7 +47,7 @@ task.spawn(function()
         local maxDetectionRadius = velocity 
 
         -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
-        local adjustedBaseDetectionRadius = math.clamp(10 + (velocity * 0.5), 10, maxDetectionRadius) 
+        local adjustedBaseDetectionRadius = math.clamp(20 + (velocity * 0.5), 20, maxDetectionRadius) 
 
         -- Vérifier si la cible est dans la sphère
         if distance <= adjustedBaseDetectionRadius then
