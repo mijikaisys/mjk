@@ -9,19 +9,19 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local ero = false
 
 -- Rayon de détection
-local detectionRadius = 22
+local detectionRadius = 25 
 
 task.spawn(function()
-    -- Création d'un cercle de détection
-    local circlePart = Instance.new("Part")
-    circlePart.Size = Vector3.new(detectionRadius * 2, 0.1, detectionRadius * 2) -- Taille du cercle (plat)
-    circlePart.Shape = Enum.PartType.Cylinder -- Forme circulaire
-    circlePart.Anchored = true -- Ne pas bouger avec la physique
-    circlePart.CanCollide = false -- Ne pas interagir avec d'autres objets
-    circlePart.Material = Enum.Material.Neon -- Matériau du cercle
-    circlePart.Color = Color3.new(0, 1, 0) -- Couleur verte
-    circlePart.Transparency = 0.5 -- Transparence
-    circlePart.Parent = workspace -- Ajouter le cercle au workspace
+    -- Création d'une sphère de détection
+    local spherePart = Instance.new("Part")
+    spherePart.Size = Vector3.new(detectionRadius * 2, detectionRadius * 2, detectionRadius * 2) -- Taille de la sphère
+    spherePart.Shape = Enum.PartType.Ball -- Forme sphérique
+    spherePart.Anchored = true -- Ne pas bouger avec la physique
+    spherePart.CanCollide = false -- Ne pas interagir avec d'autres objets
+    spherePart.Material = Enum.Material.Neon -- Matériau de la sphère
+    spherePart.Color = Color3.new(0, 1, 0) -- Couleur verte
+    spherePart.Transparency = 0.5 -- Transparence
+    spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
     RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
@@ -33,13 +33,13 @@ task.spawn(function()
             return 
         end
 
-        -- Mettre à jour la position du cercle autour du joueur
-        circlePart.Position = Player.Character.PrimaryPart.Position + Vector3.new(0, 0.1, 0) -- Élever légèrement le cercle au-dessus du joueur
+        -- Mettre à jour la position de la sphère autour du joueur
+        spherePart.Position = Player.Character.PrimaryPart.Position -- Centrer la sphère sur le joueur
 
         local playerPos = Player.Character.PrimaryPart.Position
         local targetPos = par.Position
 
-        -- Vérifier si la cible est dans le cercle
+        -- Vérifier si la cible est dans la sphère
         if (targetPos - playerPos).Magnitude <= detectionRadius then
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
