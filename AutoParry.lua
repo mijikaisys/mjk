@@ -9,7 +9,7 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local ero = false
 
 -- Rayon de détection
-local detectionRadius = 25 
+local detectionRadius = 30
 
 task.spawn(function()
     -- Création d'une sphère de détection
@@ -20,7 +20,7 @@ task.spawn(function()
     spherePart.CanCollide = false -- Ne pas interagir avec d'autres objets
     spherePart.Material = Enum.Material.Neon -- Matériau de la sphère
     spherePart.Color = Color3.new(0, 1, 0) -- Couleur verte
-    spherePart.Transparency = 0.5 -- Transparence
+    spherePart.Transparency = 0.9 -- Transparence
     spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
     RunService.RenderStepped:Connect(function()
