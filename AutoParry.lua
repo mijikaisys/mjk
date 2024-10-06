@@ -25,7 +25,7 @@ task.spawn(function()
     spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
     -- Création de la sphère de spam avec une taille fixe de 20
-    local spamSphereSize = 20 -- Taille fixe
+    local spamSphereSize = 40-- Taille fixe
     local spamSpherePart = Instance.new("Part")
     spamSpherePart.Size = Vector3.new(spamSphereSize, spamSphereSize, spamSphereSize) -- Taille fixe pour la sphère de spam
     spamSpherePart.Shape = Enum.PartType.Ball -- Forme sphérique
