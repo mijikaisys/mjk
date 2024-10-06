@@ -24,10 +24,10 @@ task.spawn(function()
     spherePart.Transparency = 0.5 -- Transparence
     spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
-    -- Création de la sphère de spam
-    local spamRadius = baseDetectionRadius * (1 - 0.69) -- 31% de la taille de la sphère de détection
+    -- Création de la sphère de spam avec une taille fixe
+    local spamSphereSize = 14.5 -- Taille fixe entre 13.5 et 15
     local spamSpherePart = Instance.new("Part")
-    spamSpherePart.Size = Vector3.new(spamRadius * 2, spamRadius * 2, spamRadius * 2) -- Taille fixe pour la sphère de spam
+    spamSpherePart.Size = Vector3.new(spamSphereSize, spamSphereSize, spamSphereSize) -- Taille fixe pour la sphère de spam
     spamSpherePart.Shape = Enum.PartType.Ball -- Forme sphérique
     spamSpherePart.Anchored = true -- Ne pas bouger avec la physique
     spamSpherePart.CanCollide = false -- Ne pas interagir avec d'autres objets
@@ -85,7 +85,7 @@ task.spawn(function()
                 local o = l - 5
                 local p = o / n
 
-                if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
+                if parry_helper.IsPlayerTarget(par) and p <= 0.55 and not ero then
                     -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait(0.01)
