@@ -24,8 +24,8 @@ task.spawn(function()
     spherePart.Transparency = 0.5 -- Transparence
     spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
-    -- Création de la sphère de spam avec une taille fixe
-    local spamSphereSize = 14.5 -- Taille fixe entre 13.5 et 15
+    -- Création de la sphère de spam avec une taille fixe de 20
+    local spamSphereSize = 20 -- Taille fixe
     local spamSpherePart = Instance.new("Part")
     spamSpherePart.Size = Vector3.new(spamSphereSize, spamSphereSize, spamSphereSize) -- Taille fixe pour la sphère de spam
     spamSpherePart.Shape = Enum.PartType.Ball -- Forme sphérique
@@ -85,7 +85,7 @@ task.spawn(function()
                 local o = l - 5
                 local p = o / n
 
-                if parry_helper.IsPlayerTarget(par) and p <= 0.55 and not ero then
+                if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
                     -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait(0.01)
@@ -118,23 +118,8 @@ task.spawn(function()
 
         -- Boucle pour spammer SendMouseButtonEvent
         if spamActive then
-            while spamActive do
-                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                wait(0.01) -- Petite pause pour éviter un crash
-                -- Vérifier à nouveau si un autre joueur est dans la sphère de spam
-                spamActive = false
-                for _, otherPlayer in pairs(Players:GetPlayers()) do
-                    if otherPlayer ~= Player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        local otherPlayerPosition = otherPlayer.Character.HumanoidRootPart.Position
-                        local spamDistance = (otherPlayerPosition - spamSpherePart.Position).Magnitude
-                        
-                        if spamDistance <= spamSpherePart.Size.X / 2 then
-                            spamActive = true
-                            break
-                        end
-                    end
-                end
-            end
+            VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+            wait(0.01) -- Petite pause pour éviter un crash
         end
     end)
 end)
