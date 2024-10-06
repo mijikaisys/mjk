@@ -9,8 +9,8 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local ero = false
 
 -- Rayon de détection de base
-local baseDetectionRadius = 25 
-local maxDetectionRadius = 70 -- Taille maximale de la sphère
+local baseDetectionRadius = 50
+local maxDetectionRadius = 100 -- Taille maximale de la sphère
 
 task.spawn(function()
     -- Création d'une sphère de détection
@@ -45,9 +45,9 @@ task.spawn(function()
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
         -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
-        baseDetectionRadius = math.clamp(10 + (velocity * 0.5), 10, maxDetectionRadius) -- Ajuster la taille en fonction de la vitesse
+        baseDetectionRadius = math.clamp(10 + (velocity * 1.5), 10, maxDetectionRadius) -- Facteur d'augmentation de vitesse
 
-        -- Mettre à jour la taille de la sphère en fonction de la distance
+        -- Mettre à jour la taille de la sphère
         local newSize = math.clamp(baseDetectionRadius - (distance * 0.5), 5, baseDetectionRadius) -- Taille minimale de 5
         spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
 
