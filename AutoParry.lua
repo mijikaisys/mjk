@@ -8,19 +8,20 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 
 local ero = false
 
--- Rayon de détection
-local detectionRadius = 30
+-- Rayon de détection de base
+local baseDetectionRadius = 27
+local maxDetectionRadius = baseDetectionRadius -- Taille maximale de la sphère
 
 task.spawn(function()
     -- Création d'une sphère de détection
     local spherePart = Instance.new("Part")
-    spherePart.Size = Vector3.new(detectionRadius * 2, detectionRadius * 2, detectionRadius * 2) -- Taille de la sphère
+    spherePart.Size = Vector3.new(maxDetectionRadius * 2, maxDetectionRadius * 2, maxDetectionRadius * 2) -- Taille de la sphère
     spherePart.Shape = Enum.PartType.Ball -- Forme sphérique
     spherePart.Anchored = true -- Ne pas bouger avec la physique
     spherePart.CanCollide = false -- Ne pas interagir avec d'autres objets
     spherePart.Material = Enum.Material.Neon -- Matériau de la sphère
-    spherePart.Color = Color3.new(0, 1, 0) -- Couleur verte
-    spherePart.Transparency = 0.9 -- Transparence
+    spherePart.Color = Color3.new(0.2, 0.2, 0.5) -- Couleur sombre (bleu foncé)
+    spherePart.Transparency = 0.5 -- Transparence
     spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
     RunService.RenderStepped:Connect(function()
@@ -39,8 +40,15 @@ task.spawn(function()
         local playerPos = Player.Character.PrimaryPart.Position
         local targetPos = par.Position
 
+        -- Calculer la distance entre le joueur et la cible
+        local distance = (targetPos - playerPos).Magnitude
+
+        -- Ajuster la taille de la sphère en fonction de la distance
+        local newSize = math.clamp(maxDetectionRadius - (distance * 0.5), 5, maxDetectionRadius) -- Taille minimale de 5
+        spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
+
         -- Vérifier si la cible est dans la sphère
-        if (targetPos - playerPos).Magnitude <= detectionRadius then
+        if distance <= maxDetectionRadius then
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
                 hat = par.zoomies.VectorVelocity
