@@ -10,7 +10,6 @@ local ero = false
 
 -- Rayon de détection de base
 local baseDetectionRadius = 10 
-local maxDetectionRadius = 50 -- Taille maximale de la sphère
 
 task.spawn(function()
     -- Création d'une sphère de détection
@@ -44,15 +43,18 @@ task.spawn(function()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
-        baseDetectionRadius = math.clamp(10 + (velocity * 0.5), 10, maxDetectionRadius) -- Ajuster la taille en fonction de la vitesse
+        -- Définir maxDetectionRadius égal à la vitesse de la balle
+        local maxDetectionRadius = velocity 
 
-        -- Mettre à jour la taille de la sphère en fonction de la distance
-        local newSize = math.clamp(baseDetectionRadius - (distance * 0.5), 5, baseDetectionRadius) -- Taille minimale de 5
-        spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
+        -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
+        local adjustedBaseDetectionRadius = math.clamp(10 + (velocity * 0.5), 10, maxDetectionRadius) 
 
         -- Vérifier si la cible est dans la sphère
-        if distance <= baseDetectionRadius then
+        if distance <= adjustedBaseDetectionRadius then
+            -- Si le joueur est visé, ajuster la taille de la sphère
+            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.5), 5, adjustedBaseDetectionRadius) -- Taille minimale de 5
+            spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
+
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
                 hat = par.zoomies.VectorVelocity
@@ -69,7 +71,7 @@ task.spawn(function()
                 local o = l - 5
                 local p = o / n
 
-                if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
+                if parry_helper.IsPlayerTarget(par) and p <= 0.55 and not ero then
                     -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait(0.01)
@@ -79,6 +81,8 @@ task.spawn(function()
                 ero = false
             end
         else
+            -- Si le joueur n'est pas visé, réinitialiser la taille de la sphère
+            spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2) -- Retour à la taille de base
             ero = false -- Réinitialiser ero si la balle sort de la sphère
         end
     end)
