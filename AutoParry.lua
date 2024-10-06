@@ -45,9 +45,9 @@ task.spawn(function()
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
         -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
-        baseDetectionRadius = math.clamp(10 + (velocity * 1.5), 10, maxDetectionRadius) -- Facteur d'augmentation de vitesse
+        baseDetectionRadius = math.clamp(10 + (velocity * 0.5), 10, maxDetectionRadius) -- Ajuster la taille en fonction de la vitesse
 
-        -- Mettre à jour la taille de la sphère
+        -- Mettre à jour la taille de la sphère en fonction de la distance
         local newSize = math.clamp(baseDetectionRadius - (distance * 0.5), 5, baseDetectionRadius) -- Taille minimale de 5
         spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
 
@@ -70,6 +70,7 @@ task.spawn(function()
                 local p = o / n
 
                 if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
+                    -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait(0.01)
                     ero = true
@@ -77,6 +78,8 @@ task.spawn(function()
             else
                 ero = false
             end
+        else
+            ero = false -- Réinitialiser ero si la balle sort de la sphère
         end
     end)
 end)
