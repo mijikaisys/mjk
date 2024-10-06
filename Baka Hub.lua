@@ -42,10 +42,10 @@ Tab:AddButton({
 })
 
 Tab:AddButton({
-	Name = "Auto Spam",
+	Name = "Emanuel Spam",
 	Callback = function()
 
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/auto%20spam.lua"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/manual%20spam.lua"))()
   	end    
 })
 
