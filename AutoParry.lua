@@ -9,32 +9,17 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 
 local ero = false
 
--- Création d'un ScreenGui et d'un cercle
-local screenGui = Instance.new("ScreenGui", Player:WaitForChild("PlayerGui"))
-local circle = Instance.new("Frame")
-
--- Paramètres du cercle
-circle.Size = UDim2.new(0, 100, 0, 100) -- Taille du cercle
-circle.Position = UDim2.new(0.5, -50, 0.5, -50) -- Position initiale au centre de l'écran
-circle.BackgroundColor3 = Color3.new(1, 1, 1) -- Couleur blanche
-circle.BackgroundTransparency = 0.5 -- Transparence
-circle.AnchorPoint = Vector2.new(0.5, 0.5) -- Centrer l'ancre du cercle
-circle.Parent = screenGui
-
--- Fonction pour mettre à jour la position et la taille du cercle
-local function updateCircle(target)
-    if target then
-        local targetPos = target.Position
-        local targetVelocity = target.AssemblyLinearVelocity
-        local screenPos = workspace.CurrentCamera:WorldToScreenPoint(targetPos)
-
-        circle.Position = UDim2.new(0, screenPos.X, 0, screenPos.Y)
-
-        -- Ajuster la taille en fonction de la vitesse
-        local velocityMagnitude = targetVelocity.Magnitude
-        circle.Size = UDim2.new(0, 100 + velocityMagnitude, 0, 100 + velocityMagnitude)
-    end
-end
+-- Création d'un cercle (Part) autour du joueur
+local detectionRadius = 10 -- Rayon du cercle de détection
+local circlePart = Instance.new("Part")
+circlePart.Size = Vector3.new(detectionRadius * 2, 0.1, detectionRadius * 2) -- Taille du cercle (plat)
+circlePart.Shape = Enum.PartType.Cylinder -- Forme circulaire
+circlePart.Anchored = true -- Ne pas bouger avec la physique
+circlePart.CanCollide = false -- Ne pas interagir avec d'autres objets
+circlePart.Material = Enum.Material.Neon -- Matériau du cercle
+circlePart.Color = Color3.new(0, 1, 0) -- Couleur verte
+circlePart.Transparency = 0.5 -- Transparence
+circlePart.Parent = workspace -- Ajouter le cercle au workspace
 
 task.spawn(function()
     RunService.PreRender:Connect(function()
@@ -47,31 +32,38 @@ task.spawn(function()
             return 
         end
 
-        updateCircle(par) -- Met à jour la position du cercle en fonction de la cible
+        -- Mettre à jour la position du cercle autour du joueur
+        circlePart.Position = Player.Character.PrimaryPart.Position + Vector3.new(0, 0.1, 0) -- Élever légèrement le cercle au-dessus du joueur
 
-        local hat = par.AssemblyLinearVelocity
-        if par:FindFirstChild('zoomies') then 
-            hat = par.zoomies.VectorVelocity
-        end
+        local playerPos = Player.Character.PrimaryPart.Position
+        local targetPos = par.Position
 
-        local i = par.Position
-        local j = Player.Character.PrimaryPart.Position
-        local kil = (j - i).Unit
-        local l = Player:DistanceFromCharacter(i)
-        local m = kil:Dot(hat.Unit)
-        local n = hat.Magnitude
-
-        if m > 0 then
-            local o = l - 5
-            local p = o / n
-
-            if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
-                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                wait(0.01)
-                ero = true
+        -- Vérifier si la cible est dans le cercle
+        if (targetPos - playerPos).Magnitude <= detectionRadius then
+            local hat = par.AssemblyLinearVelocity
+            if par:FindFirstChild('zoomies') then 
+                hat = par.zoomies.VectorVelocity
             end
-        else
-            ero = false
+
+            local i = par.Position
+            local j = Player.Character.PrimaryPart.Position
+            local kil = (j - i).Unit
+            local l = Player:DistanceFromCharacter(i)
+            local m = kil:Dot(hat.Unit)
+            local n = hat.Magnitude
+
+            if m > 0 then
+                local o = l - 5
+                local p = o / n
+
+                if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
+                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                    wait(0.01)
+                    ero = true
+                end
+            else
+                ero = false
+            end
         end
     end)
 end)
