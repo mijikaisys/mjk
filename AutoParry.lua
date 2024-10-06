@@ -9,44 +9,18 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local ero = false
 
 -- Rayon de détection de base
-local baseDetectionRadius = 20  -- Augmenté pour une sphère de départ plus grande
+local baseDetectionRadius = 20  -- Rayon de la sphère de détection
 
 -- Création de la sphère de détection principale
 local spherePart = Instance.new("Part")
-spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
-spherePart.Shape = Enum.PartType.Ball
-spherePart.Anchored = true
-spherePart.CanCollide = false
-spherePart.Material = Enum.Material.Neon
-spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-spherePart.Transparency = 0.5
-spherePart.Parent = workspace
-
--- Création de la sphère de spam avec une taille fixe de 20
-local spamSphereSize = 40
-local spamSpherePart = Instance.new("Part")
-spamSpherePart.Size = Vector3.new(spamSphereSize, spamSphereSize, spamSphereSize)
-spamSpherePart.Shape = Enum.PartType.Ball
-spamSpherePart.Anchored = true
-spamSpherePart.CanCollide = false
-spamSpherePart.Material = Enum.Material.Neon
-spamSpherePart.Color = Color3.new(1, 0.75, 0.8)
-spamSpherePart.Transparency = 0.5
-spamSpherePart.Parent = workspace
-
-local function isHumanoidNear()
-    for _, otherPlayer in pairs(Players:GetPlayers()) do
-        if otherPlayer ~= Player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local otherPlayerPosition = otherPlayer.Character.HumanoidRootPart.Position
-            local distance = (otherPlayerPosition - spamSpherePart.Position).Magnitude
-            
-            if distance <= spamSpherePart.Size.X / 2 then
-                return true
-            end
-        end
-    end
-    return false
-end
+spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2) -- Taille de la sphère
+spherePart.Shape = Enum.PartType.Ball -- Forme sphérique
+spherePart.Anchored = true -- Ne pas bouger avec la physique
+spherePart.CanCollide = false -- Ne pas interagir avec d'autres objets
+spherePart.Material = Enum.Material.Neon -- Matériau de la sphère
+spherePart.Color = Color3.new(0.2, 0.2, 0.5) -- Couleur sombre (bleu foncé)
+spherePart.Transparency = 0.5 -- Transparence
+spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
 RunService.RenderStepped:Connect(function()
     if not getgenv().autoparry then 
@@ -58,20 +32,27 @@ RunService.RenderStepped:Connect(function()
         return 
     end
 
-    spherePart.Position = Player.Character.PrimaryPart.Position
-    spamSpherePart.Position = Player.Character.PrimaryPart.Position
+    -- Mettre à jour la position de la sphère autour du joueur
+    spherePart.Position = Player.Character.PrimaryPart.Position -- Centrer la sphère sur le joueur
 
     local playerPos = Player.Character.PrimaryPart.Position
     local targetPos = par.Position
 
+    -- Calculer la distance et la vitesse de la cible
     local distance = (targetPos - playerPos).Magnitude
     local velocity = par.AssemblyLinearVelocity.Magnitude
+
+    -- Définir maxDetectionRadius égal à la vitesse de la balle
     local maxDetectionRadius = velocity 
+
+    -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
     local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
+    -- Vérifier si la cible est dans la sphère principale
     if distance <= adjustedBaseDetectionRadius then
+        -- Si le joueur est visé, ajuster la taille de la sphère
         local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-        spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
+        spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
 
         local hat = par.AssemblyLinearVelocity
         if par:FindFirstChild('zoomies') then 
@@ -90,6 +71,7 @@ RunService.RenderStepped:Connect(function()
             local p = o / n
 
             if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
+                -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                 VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                 wait(0.01)
                 ero = true
@@ -98,12 +80,8 @@ RunService.RenderStepped:Connect(function()
             ero = false
         end
     else
-        spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
-        ero = false
-    end
-
-    if isHumanoidNear() then
-        VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-        wait(0.01)
+        -- Si le joueur n'est pas visé, réinitialiser la taille de la sphère
+        spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2) -- Retour à la taille de base
+        ero = false -- Réinitialiser ero si la balle sort de la sphère
     end
 end)
