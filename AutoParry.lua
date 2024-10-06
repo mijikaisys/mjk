@@ -1,7 +1,6 @@
 getgenv().autoparry = true
 
 local VirtualManager = game:GetService("VirtualInputManager")
-local Stats = game:GetService('Stats')
 local Players = game:GetService('Players')
 local Player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local RunService = game:GetService('RunService')
@@ -9,20 +8,22 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 
 local ero = false
 
--- Création d'un cercle (Part) autour du joueur
-local detectionRadius = 10 -- Rayon du cercle de détection
-local circlePart = Instance.new("Part")
-circlePart.Size = Vector3.new(detectionRadius * 2, 0.1, detectionRadius * 2) -- Taille du cercle (plat)
-circlePart.Shape = Enum.PartType.Cylinder -- Forme circulaire
-circlePart.Anchored = true -- Ne pas bouger avec la physique
-circlePart.CanCollide = false -- Ne pas interagir avec d'autres objets
-circlePart.Material = Enum.Material.Neon -- Matériau du cercle
-circlePart.Color = Color3.new(0, 1, 0) -- Couleur verte
-circlePart.Transparency = 0.5 -- Transparence
-circlePart.Parent = workspace -- Ajouter le cercle au workspace
+-- Rayon de détection
+local detectionRadius = 10 
 
 task.spawn(function()
-    RunService.PreRender:Connect(function()
+    -- Création d'un cercle de détection
+    local circlePart = Instance.new("Part")
+    circlePart.Size = Vector3.new(detectionRadius * 2, 0.1, detectionRadius * 2) -- Taille du cercle (plat)
+    circlePart.Shape = Enum.PartType.Cylinder -- Forme circulaire
+    circlePart.Anchored = true -- Ne pas bouger avec la physique
+    circlePart.CanCollide = false -- Ne pas interagir avec d'autres objets
+    circlePart.Material = Enum.Material.Neon -- Matériau du cercle
+    circlePart.Color = Color3.new(0, 1, 0) -- Couleur verte
+    circlePart.Transparency = 0.5 -- Transparence
+    circlePart.Parent = workspace -- Ajouter le cercle au workspace
+
+    RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
             return 
         end
