@@ -51,7 +51,7 @@ task.spawn(function()
         if distance <= baseDetectionRadius then
             -- Si le joueur est visé, ajuster la taille de la sphère
             local newSize = math.clamp(baseDetectionRadius - (distance * 0.5), 5, baseDetectionRadius) -- Taille minimale de 5
-            spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
+            spherePart.Size = Vector3.new(newSize * 0.5, newSize * 0.5, newSize * 0.5) -- Ajuster la taille
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
