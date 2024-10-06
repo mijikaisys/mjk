@@ -11,7 +11,6 @@ local ero = false
 -- Rayon de détection de base
 local baseDetectionRadius = 10 
 local maxDetectionRadius = 20 -- Taille maximale de la sphère
-local isParried = false -- Indicateur si le parry a été effectué
 
 task.spawn(function()
     -- Création d'une sphère de détection
@@ -48,13 +47,8 @@ task.spawn(function()
         -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
         baseDetectionRadius = math.clamp(10 + (velocity * 0.5), 10, maxDetectionRadius) -- Ajuster la taille en fonction de la vitesse
 
-        -- Mettre à jour la taille de la sphère en fonction de l'état de parry
-        local newSize
-        if isParried then
-            newSize = baseDetectionRadius -- Réduire à la taille de base après un parry
-        else
-            newSize = math.clamp(baseDetectionRadius - (distance * 0.5), 5, baseDetectionRadius) -- Taille minimale de 5
-        end
+        -- Mettre à jour la taille de la sphère en fonction de la distance
+        local newSize = math.clamp(baseDetectionRadius - (distance * 0.5), 5, baseDetectionRadius) -- Taille minimale de 5
         spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
 
         -- Vérifier si la cible est dans la sphère
@@ -75,19 +69,17 @@ task.spawn(function()
                 local o = l - 5
                 local p = o / n
 
-                if parry_helper.IsPlayerTarget(par) and p <= 0.55 and not ero then
+                if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
                     -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait(0.01)
                     ero = true
-                    isParried = true -- Indiquer qu'un parry a été effectué
                 end
             else
                 ero = false
             end
         else
             ero = false -- Réinitialiser ero si la balle sort de la sphère
-            isParried = false -- Réinitialiser l'état de parry lorsque la balle est en dehors de la sphère
         end
     end)
 end)
