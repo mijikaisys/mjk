@@ -10,7 +10,7 @@ local ero = false
 
 -- Rayon de détection de base
 local baseDetectionRadius = 50
-local maxDetectionRadius = 100 -- Taille maximale de la sphère
+local maxDetectionRadius = 75 -- Taille maximale de la sphère
 
 task.spawn(function()
     -- Création d'une sphère de détection
