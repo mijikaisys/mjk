@@ -8,31 +8,42 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 
 local ero = false
 
--- Rayon de détection de base
-local baseDetectionRadius = 20  -- Rayon de la sphère de détection
+local stats = {
+    successfulParries = 0,
+    failedParries = 0,
+}
 
--- Création de la sphère de détection principale
+local baseDetectionRadius = 20
+
 local spherePart = Instance.new("Part")
-spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2) -- Taille de la sphère
-spherePart.Shape = Enum.PartType.Ball -- Forme sphérique
-spherePart.Anchored = true -- Ne pas bouger avec la physique
-spherePart.CanCollide = false -- Ne pas interagir avec d'autres objets
-spherePart.Material = Enum.Material.Neon -- Matériau de la sphère
-spherePart.Color = Color3.new(0.2, 0.2, 0.5) -- Couleur sombre (bleu foncé)
-spherePart.Transparency = 0.5 -- Transparence
-spherePart.Parent = workspace -- Ajouter la sphère au workspace
+spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
+spherePart.Shape = Enum.PartType.Ball
+spherePart.Anchored = true
+spherePart.CanCollide = false
+spherePart.Material = Enum.Material.ForceField
+spherePart.Color = Color3.new(0.2, 0.2, 0.5)
+spherePart.Transparency = 0.5
+spherePart.Parent = workspace
 
--- Création d'un texte GUI pour afficher les informations
 local screenGui = Instance.new("ScreenGui")
 local textLabel = Instance.new("TextLabel")
-
-screenGui.Parent = Player.PlayerGui
-textLabel.Parent = screenGui
 textLabel.Size = UDim2.new(0, 200, 0, 100)
 textLabel.Position = UDim2.new(0.8, 0, 0, 0)
 textLabel.BackgroundTransparency = 0.5
 textLabel.TextColor3 = Color3.new(1, 1, 1)
 textLabel.TextScaled = true
+screenGui.Parent = Player.PlayerGui
+textLabel.Parent = screenGui
+
+local parrySound = Instance.new("Sound", Player.Character)
+parrySound.SoundId = "rbxassetid://YOUR_SOUND_ID"
+
+local proximityIndicator = Instance.new("Part")
+proximityIndicator.Size = Vector3.new(5, 5, 5)
+proximityIndicator.Shape = Enum.PartType.Ball
+proximityIndicator.Anchored = true
+proximityIndicator.Color = Color3.new(1, 1, 0)
+proximityIndicator.Parent = workspace
 
 RunService.RenderStepped:Connect(function()
     if not getgenv().autoparry then 
@@ -44,27 +55,20 @@ RunService.RenderStepped:Connect(function()
         return 
     end
 
-    -- Mettre à jour la position de la sphère autour du joueur
-    spherePart.Position = Player.Character.PrimaryPart.Position -- Centrer la sphère sur le joueur
+    spherePart.Position = Player.Character.PrimaryPart.Position
 
     local playerPos = Player.Character.PrimaryPart.Position
     local targetPos = par.Position
 
-    -- Calculer la distance et la vitesse de la cible
     local distance = (targetPos - playerPos).Magnitude
     local velocity = par.AssemblyLinearVelocity.Magnitude
 
-    -- Définir maxDetectionRadius égal à la vitesse de la balle divisée par 30%
     local maxDetectionRadius = velocity / 0.3
-
-    -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
     local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
-    -- Vérifier si la cible est dans la sphère principale
     if distance <= adjustedBaseDetectionRadius then
-        -- Si le joueur est visé, ajuster la taille de la sphère
         local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-        spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2) -- Ajuster la taille
+        spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
 
         local hat = par.AssemblyLinearVelocity
         if par:FindFirstChild('zoomies') then 
@@ -83,22 +87,28 @@ RunService.RenderStepped:Connect(function()
             local p = o / n
 
             if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
-                -- Envoyer l'événement de parry uniquement quand la balle est dans la sphère
                 VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                wait(0.01)
+                parrySound:Play()
+                stats.successfulParries = stats.successfulParries + 1
+                spherePart.Color = Color3.new(0, 1, 0)
                 ero = true
+            else
+                stats.failedParries = stats.failedParries + 1
+                spherePart.Color = Color3.new(1, 0, 0)
             end
         else
             ero = false
         end
+
+        proximityIndicator.Position = Player.Character.PrimaryPart.Position
+
     else
-        -- Si le joueur n'est pas visé, réinitialiser la taille de la sphère
-        spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2) -- Retour à la taille de base
-        ero = false -- Réinitialiser ero si la balle sort de la sphère
+        spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
+        ero = false
+        proximityIndicator.Position = Vector3.new(0, -1000, 0)
     end
 
-    -- Mettre à jour le texte à l'écran
-    local ping = Player:GetNetworkPing() -- Obtenir le ping du joueur
-    local fps = math.floor(1 / RunService.RenderStepped:Wait()) -- Calculer les FPS
-    textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f", ping, fps, velocity)
+    local ping = Player:GetNetworkPing()
+    local fps = math.floor(1 / RunService.RenderStepped:Wait())
+    textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
 end)
