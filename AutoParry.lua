@@ -36,7 +36,7 @@ screenGui.Parent = Player.PlayerGui
 textLabel.Parent = screenGui
 
 local parrySound = Instance.new("Sound", Player.Character)
-parrySound.SoundId = "rbxassetid://YOUR_SOUND_ID"
+parrySound.SoundId = "rbxassetid://7108607217"
 
 local proximityIndicator = Instance.new("Part")
 proximityIndicator.Size = Vector3.new(5, 5, 5)
