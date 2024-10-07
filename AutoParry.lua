@@ -22,6 +22,18 @@ spherePart.Color = Color3.new(0.2, 0.2, 0.5) -- Couleur sombre (bleu foncé)
 spherePart.Transparency = 0.5 -- Transparence
 spherePart.Parent = workspace -- Ajouter la sphère au workspace
 
+-- Création d'un texte GUI pour afficher les informations
+local screenGui = Instance.new("ScreenGui")
+local textLabel = Instance.new("TextLabel")
+
+screenGui.Parent = Player.PlayerGui
+textLabel.Parent = screenGui
+textLabel.Size = UDim2.new(0, 200, 0, 100)
+textLabel.Position = UDim2.new(0.8, 0, 0, 0)
+textLabel.BackgroundTransparency = 0.5
+textLabel.TextColor3 = Color3.new(1, 1, 1)
+textLabel.TextScaled = true
+
 RunService.RenderStepped:Connect(function()
     if not getgenv().autoparry then 
         return 
@@ -42,8 +54,8 @@ RunService.RenderStepped:Connect(function()
     local distance = (targetPos - playerPos).Magnitude
     local velocity = par.AssemblyLinearVelocity.Magnitude
 
-    -- Définir maxDetectionRadius égal à la vitesse de la balle
-    local maxDetectionRadius = velocity 
+    -- Définir maxDetectionRadius égal à la vitesse de la balle divisée par 30%
+    local maxDetectionRadius = velocity / 0.3
 
     -- Ajuster la baseDetectionRadius en fonction de la vitesse (avec une limite)
     local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
@@ -84,4 +96,9 @@ RunService.RenderStepped:Connect(function()
         spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2) -- Retour à la taille de base
         ero = false -- Réinitialiser ero si la balle sort de la sphère
     end
+
+    -- Mettre à jour le texte à l'écran
+    local ping = Player:GetNetworkPing() -- Obtenir le ping du joueur
+    local fps = math.floor(1 / RunService.RenderStepped:Wait()) -- Calculer les FPS
+    textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f", ping, fps, velocity)
 end)
