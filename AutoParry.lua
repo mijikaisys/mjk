@@ -42,7 +42,7 @@ local proximityIndicator = Instance.new("Part")
 proximityIndicator.Size = Vector3.new(5, 5, 5)
 proximityIndicator.Shape = Enum.PartType.Ball
 proximityIndicator.Anchored = true
-proximityIndicator.CanCollide = false 
+proximityIndicator.CanCollide = false
 proximityIndicator.Color = Color3.new(1, 1, 0)
 proximityIndicator.Parent = workspace
 
@@ -63,6 +63,11 @@ RunService.RenderStepped:Connect(function()
 
     local distance = (targetPos - playerPos).Magnitude
     local velocity = par.AssemblyLinearVelocity.Magnitude
+
+    -- Ajustement dynamique de baseDetectionRadius en fonction de la vitesse
+    if velocity > 150 then
+        baseDetectionRadius = math.min(450, baseDetectionRadius * 2) -- Doubler jusqu'à 450
+    end
 
     local maxDetectionRadius = velocity / 0.3
     local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
@@ -86,11 +91,11 @@ RunService.RenderStepped:Connect(function()
         local thresholdP = 0.50  -- Valeur par défaut
 
         if velocity > 150 then
-            thresholdP = 0.55  -- Augmenter à 0.55 si la vitesse est supérieure à 150
+            thresholdP = 0.55
         end
 
         if velocity > 300 then
-            thresholdP = 0.63  -- Augmenter à 0.63 si la vitesse est supérieure à 300
+            thresholdP = 0.63
         end
 
         if m > 0 then
