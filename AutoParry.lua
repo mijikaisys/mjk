@@ -65,7 +65,7 @@ local function initializeParry()
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
         if velocity > 150 then
-            baseDetectionRadius = math.min(450, baseDetectionRadius * 2)
+            baseDetectionRadius = math.min(150, baseDetectionRadius * 2)
         end
 
         local maxDetectionRadius = velocity / 0.3
