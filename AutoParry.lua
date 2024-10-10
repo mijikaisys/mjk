@@ -36,13 +36,12 @@ screenGui.Parent = Player.PlayerGui
 textLabel.Parent = screenGui
 
 local parrySound = Instance.new("Sound", Player.Character)
-parrySound.SoundId = "rbxassetid://7108607217"
+parrySound.SoundId = "rbxassetid://YOUR_SOUND_ID"
 
 local proximityIndicator = Instance.new("Part")
 proximityIndicator.Size = Vector3.new(5, 5, 5)
 proximityIndicator.Shape = Enum.PartType.Ball
 proximityIndicator.Anchored = true
-proximityIndicator.CanCollide = false 
 proximityIndicator.Color = Color3.new(1, 1, 0)
 proximityIndicator.Parent = workspace
 
@@ -83,11 +82,21 @@ RunService.RenderStepped:Connect(function()
         local m = kil:Dot(hat.Unit)
         local n = hat.Magnitude
 
+        local thresholdP = 0.50  -- Valeur par défaut
+
+        if velocity > 150 then
+            thresholdP = 0.55  -- Augmenter à 0.55 si la vitesse est supérieure à 150
+        end
+
+        if velocity > 300 then
+            thresholdP = 0.63  -- Augmenter à 0.63 si la vitesse est supérieure à 300
+        end
+
         if m > 0 then
             local o = l - 5
             local p = o / n
 
-            if parry_helper.IsPlayerTarget(par) and p <= 0.50 and not ero then
+            if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
                 VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                 parrySound:Play()
                 stats.successfulParries = stats.successfulParries + 1
