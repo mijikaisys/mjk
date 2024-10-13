@@ -131,9 +131,8 @@ local function initializeParry()
 
             if isSpamming then
                 -- Spam des événements de clic
-                for i = 1, 5 do -- Modifier le nombre de répétitions si nécessaire
-                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                end
+                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                    wait()
             end
 
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
@@ -150,3 +149,12 @@ local function initializeParry()
         textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
     end)
 end
+
+-- Écouter les événements de changement de personnage
+Player.CharacterAdded:Connect(function()
+    wait()  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
+    initializeParry()  -- Réinitialiser le parry à chaque respawn
+end)
+
+-- Initialiser le parry à la première exécution
+initializeParry()
