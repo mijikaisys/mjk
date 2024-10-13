@@ -119,9 +119,9 @@ local function initializeParry()
             end
 
             -- Gestion de l'auto-spam
-            if distance <= 20 then
+            if distance <= 30 then
                 spamTimer = spamTimer + RunService.RenderStepped:Wait() -- Incrémenter le timer
-                if spamTimer >= 3 then
+                if spamTimer >= 2 then
                     isSpamming = true
                 end
             else
