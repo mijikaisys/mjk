@@ -14,6 +14,8 @@ local function initializeParry()
     }
 
     local baseDetectionRadius = 20
+    local spamTimer = 0
+    local isSpamming = false
 
     local spherePart = Instance.new("Part")
     spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
@@ -107,6 +109,7 @@ local function initializeParry()
                     stats.successfulParries = stats.successfulParries + 1
                     spherePart.Color = Color3.new(0, 1, 0)
                     ero = true
+                    spamTimer = 0 -- Réinitialiser le timer lorsque le parry est réussi
                 else
                     stats.failedParries = stats.failedParries + 1
                     spherePart.Color = Color3.new(1, 0, 0)
@@ -115,11 +118,31 @@ local function initializeParry()
                 ero = false
             end
 
+            -- Gestion de l'auto-spam
+            if distance <= 20 then
+                spamTimer = spamTimer + RunService.RenderStepped:Wait() -- Incrémenter le timer
+                if spamTimer >= 3 then
+                    isSpamming = true
+                end
+            else
+                spamTimer = 0 -- Réinitialiser le timer si la balle s'éloigne
+                isSpamming = false
+            end
+
+            if isSpamming then
+                -- Spam des événements de clic
+                for i = 1, 5 do -- Modifier le nombre de répétitions si nécessaire
+                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                end
+            end
+
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
         else
             spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
             ero = false
             proximityIndicator.Position = Vector3.new(0, -1000, 0)
+            spamTimer = 0 -- Réinitialiser le timer si la balle s'éloigne
+            isSpamming = false -- Arrêter le spam
         end
 
         local ping = Player:GetNetworkPing()
@@ -127,12 +150,3 @@ local function initializeParry()
         textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
     end)
 end
-
--- Écouter les événements de changement de personnage
-Player.CharacterAdded:Connect(function()
-    wait(1)  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
-    initializeParry()  -- Réinitialiser le parry à chaque respawn
-end)
-
--- Initialiser le parry à la première exécution
-initializeParry()
