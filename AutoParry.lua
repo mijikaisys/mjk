@@ -46,6 +46,7 @@ local function initializeParry()
 
         local par = parry_helper.FindTargetBall()
         if not par then 
+            ero = false  -- Réinitialiser si aucune cible n'est trouvée
             return 
         end
 
@@ -59,7 +60,7 @@ local function initializeParry()
 
         -- Ajustement pour prendre en compte la hauteur
         local heightDifference = targetPos.Y - playerPos.Y
-        local isLowArc = heightDifference < 5  -- Inversé : considérer comme bas si la balle est en dessous d'un certain seuil
+        local isLowArc = heightDifference < 5  -- Considérer comme bas si la balle est en dessous d'un certain seuil
 
         local maxDetectionRadius = velocity / 0.3
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
@@ -101,13 +102,13 @@ local function initializeParry()
             parrySound:Play()
             stats.successfulParries = stats.successfulParries + 1
             spherePart.Color = Color3.new(0, 1, 0)
-            ero = true
-        else
-            if not isLowArc then
+            ero = true  -- Indiquer que le parry a été effectué
+        elseif not isLowArc then
+            if ero then
                 stats.failedParries = stats.failedParries + 1
                 spherePart.Color = Color3.new(1, 0, 0)
             end
-            ero = false
+            ero = false  -- Réinitialiser si le parry n'est pas effectué
         end
 
         -- Mise à jour des statistiques à l'écran
