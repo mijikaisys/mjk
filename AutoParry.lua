@@ -14,10 +14,9 @@ local function initializeParry()
     }
 
     local baseDetectionRadius = 20
-    local currentDetectionRadius = baseDetectionRadius  -- Utiliser une variable pour suivre la taille actuelle
 
     local spherePart = Instance.new("Part")
-    spherePart.Size = Vector3.new(currentDetectionRadius * 2, currentDetectionRadius * 2, currentDetectionRadius * 2)
+    spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
     spherePart.Shape = Enum.PartType.Ball
     spherePart.Anchored = true
     spherePart.CanCollide = false
@@ -39,6 +38,14 @@ local function initializeParry()
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://7108607217"
 
+    local proximityIndicator = Instance.new("Part")
+    proximityIndicator.Size = Vector3.new(5, 5, 5)
+    proximityIndicator.Shape = Enum.PartType.Ball
+    proximityIndicator.Anchored = true
+    proximityIndicator.CanCollide = false 
+    proximityIndicator.Color = Color3.new(0, 0, 0)
+    proximityIndicator.Parent = workspace
+
     RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
             return 
@@ -46,7 +53,6 @@ local function initializeParry()
 
         local par = parry_helper.FindTargetBall()
         if not par then 
-            ero = false  -- Réinitialiser si aucune cible n'est trouvée
             return 
         end
 
@@ -58,69 +64,70 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        -- Ajustement pour prendre en compte la hauteur
-        local heightDifference = targetPos.Y - playerPos.Y
-        local isLowArc = heightDifference < 5  -- Considérer comme bas si la balle est en dessous d'un certain seuil
 
         local maxDetectionRadius = velocity / 0.3
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
-        -- Ajustement de la taille de la sphère selon la distance à la balle
         if distance <= adjustedBaseDetectionRadius then
-            currentDetectionRadius = math.clamp(currentDetectionRadius + (adjustedBaseDetectionRadius - distance) * 0.1, baseDetectionRadius, maxDetectionRadius)
-        else
-            currentDetectionRadius = math.clamp(currentDetectionRadius - (distance * 0.1), baseDetectionRadius, maxDetectionRadius)
-        end
+            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
+            spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
 
-        spherePart.Size = Vector3.new(currentDetectionRadius * 2, currentDetectionRadius * 2, currentDetectionRadius * 2)
-
-        local hat = par.AssemblyLinearVelocity
-        if par:FindFirstChild('zoomies') then 
-            hat = par.zoomies.VectorVelocity
-        end
-
-        local i = par.Position
-        local j = Player.Character.PrimaryPart.Position
-        local kil = (j - i).Unit
-        local l = Player:DistanceFromCharacter(i)
-        local m = kil:Dot(hat.Unit)
-        local n = hat.Magnitude
-
-        local thresholdP = 0.50
-
-        if velocity > 400 then
-            thresholdP = 0.52
-        end
-
-        if velocity > 800 then
-            thresholdP = 0.54
-        end
-
-        -- Vérification si le projectile est dans une position qui peut être parrée (inversé)
-        if isLowArc and (l - 5) / n <= thresholdP and not ero then
-            VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-            parrySound:Play()
-            stats.successfulParries = stats.successfulParries + 1
-            spherePart.Color = Color3.new(0, 1, 0)
-            ero = true  -- Indiquer que le parry a été effectué
-        elseif not isLowArc then
-            if ero then
-                stats.failedParries = stats.failedParries + 1
-                spherePart.Color = Color3.new(1, 0, 0)
+            local hat = par.AssemblyLinearVelocity
+            if par:FindFirstChild('zoomies') then 
+                hat = par.zoomies.VectorVelocity
             end
-            ero = false  -- Réinitialiser si le parry n'est pas effectué
+
+            local i = par.Position
+            local j = Player.Character.PrimaryPart.Position
+            local kil = (j - i).Unit
+            local l = Player:DistanceFromCharacter(i)
+            local m = kil:Dot(hat.Unit)
+            local n = hat.Magnitude
+
+            local thresholdP = 0.50
+
+            if velocity > 400 then
+                thresholdP = 0.52
+            end
+
+            if velocity > 800 then
+                thresholdP = 0.54
+            end
+
+            if m > 0 then
+                local o = l - 5
+                local p = o / n
+
+                if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
+                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                    parrySound:Play()
+                    stats.successfulParries = stats.successfulParries + 1
+                    spherePart.Color = Color3.new(0, 1, 0)
+                    ero = true
+                else
+                    stats.failedParries = stats.failedParries + 1
+                    spherePart.Color = Color3.new(1, 0, 0)
+                end
+            else
+                ero = false
+            end
+
+            proximityIndicator.Position = Player.Character.PrimaryPart.Position
+        else
+            proximityIndicator.Position = Vector3.new(0, -1000, 0)
         end
 
-        -- Mise à jour des statistiques à l'écran
-        textLabel.Text = string.format("Parrys réussis: %d\nParrys échoués: %d", stats.successfulParries, stats.failedParries)
-    end)
-
-    -- Écouter les événements de changement de personnage
-    Player.CharacterAdded:Connect(function()
-        wait(1)  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
-        initializeParry()  -- Réinitialiser le parry à chaque respawn
+        local ping = Player:GetNetworkPing()
+        local fps = math.floor(1 / RunService.RenderStepped:Wait())
+        textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
     end)
 end
+
+-- Écouter les événements de changement de personnage
+Player.CharacterAdded:Connect(function()
+    wait(1)  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
+    initializeParry()  -- Réinitialiser le parry à chaque respawn
+end)
 
 -- Initialiser le parry à la première exécution
 initializeParry()
