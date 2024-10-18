@@ -43,7 +43,7 @@ local function initializeParry()
     proximityIndicator.Shape = Enum.PartType.Ball
     proximityIndicator.Anchored = true
     proximityIndicator.CanCollide = false 
-    proximityIndicator.Color = Color3.new(1, 1, 0)
+    proximityIndicator.Color = Color3.new(0, 0, 0)
     proximityIndicator.Parent = workspace
 
     RunService.RenderStepped:Connect(function()
