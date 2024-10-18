@@ -59,7 +59,7 @@ local function initializeParry()
 
         -- Ajustement pour prendre en compte la hauteur
         local heightDifference = targetPos.Y - playerPos.Y
-        local isHighArc = heightDifference > 5  -- Ajuste cette valeur selon le besoin
+        local isLowArc = heightDifference < 5  -- Inversé : considérer comme bas si la balle est en dessous d'un certain seuil
 
         local maxDetectionRadius = velocity / 0.3
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
@@ -95,15 +95,15 @@ local function initializeParry()
             thresholdP = 0.54
         end
 
-        -- Vérification si le projectile est dans une position qui peut être parrée
-        if (isHighArc or m > 0) and (l - 5) / n <= thresholdP and not ero then
+        -- Vérification si le projectile est dans une position qui peut être parrée (inversé)
+        if isLowArc and (l - 5) / n <= thresholdP and not ero then
             VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
             parrySound:Play()
             stats.successfulParries = stats.successfulParries + 1
             spherePart.Color = Color3.new(0, 1, 0)
             ero = true
         else
-            if not isHighArc then
+            if not isLowArc then
                 stats.failedParries = stats.failedParries + 1
                 spherePart.Color = Color3.new(1, 0, 0)
             end
