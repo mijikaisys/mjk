@@ -41,50 +41,41 @@ local function initializeParry()
             return 
         end
 
-        local par = parry_helper.FindTargetBall()
-        if not par then 
+        local targetBall = parry_helper.FindTargetBall()
+        if not targetBall then 
             return 
         end
-        
-        local playerPos = Player.Character.PrimaryPart.Position
-        local targetPos = par.Position
-        local distance = (targetPos - playerPos).Magnitude
-        local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        -- Ajustement de la taille de la sphère de détection
-        local maxDetectionRadius = math.clamp(velocity / 0.3, baseDetectionRadius, baseDetectionRadius + 50)
-        spherePart.Size = Vector3.new(maxDetectionRadius * 2, maxDetectionRadius * 2, maxDetectionRadius * 2)
-        spherePart.Position = playerPos
-        
-        -- Vérification de la distance et de la direction du projectile
-        if distance <= maxDetectionRadius then
+        local playerPos = Player.Character.PrimaryPart.Position
+        local targetPos = targetBall.Position
+        local distance = (targetPos - playerPos).Magnitude
+        local velocity = targetBall.AssemblyLinearVelocity.Magnitude
+
+        local adjustedDetectionRadius = math.clamp(baseDetectionRadius + (velocity / 2), baseDetectionRadius, baseDetectionRadius + 50)
+
+        if distance <= adjustedDetectionRadius then
             local directionToBall = (targetPos - playerPos).Unit
             local playerForward = Player.Character.PrimaryPart.CFrame.LookVector
             local angle = math.acos(directionToBall:Dot(playerForward)) * (180 / math.pi)
 
-            if angle < 45 then  -- Ajuste cet angle pour être plus strict si nécessaire
-                -- Logique de parry
-                local hitDirection = par.AssemblyLinearVelocity.Unit
-                if hitDirection.Y < 0 then  -- Vérifie si le projectile vient d'en haut
-                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                    parrySound:Play()
-                    stats.successfulParries = stats.successfulParries + 1
-                    spherePart.Color = Color3.new(0, 1, 0)  -- Couleur de succès
-                else
-                    stats.failedParries = stats.failedParries + 1
-                    spherePart.Color = Color3.new(1, 0, 0)  -- Couleur d'échec
-                end
+            if angle < 45 and targetBall.AssemblyLinearVelocity.Y < 0 then
+                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                parrySound:Play()
+                stats.successfulParries = stats.successfulParries + 1
+                spherePart.Color = Color3.new(0, 1, 0)
+            else
+                stats.failedParries = stats.failedParries + 1
+                spherePart.Color = Color3.new(1, 0, 0)
             end
         end
 
-        -- Mise à jour des statistiques à l'écran
         textLabel.Text = string.format("Parrys réussis: %d\nParrys échoués: %d", stats.successfulParries, stats.failedParries)
     end)
 end
 
 -- Écouter les événements de changement de personnage
 Player.CharacterAdded:Connect(function()
-    wait(1)  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
+    wait(1)  -- Attendre pour s'assurer que le personnage est complètement chargé
     initializeParry()  -- Réinitialiser le parry à chaque respawn
 end)
 
