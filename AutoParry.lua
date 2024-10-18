@@ -39,14 +39,6 @@ local function initializeParry()
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://7108607217"
 
-    local proximityIndicator = Instance.new("Part")
-    proximityIndicator.Size = Vector3.new(5, 5, 5)
-    proximityIndicator.Shape = Enum.PartType.Ball
-    proximityIndicator.Anchored = true
-    proximityIndicator.CanCollide = false 
-    proximityIndicator.Color = Color3.new(0, 0, 0)
-    proximityIndicator.Parent = workspace
-
     RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
             return 
@@ -103,36 +95,23 @@ local function initializeParry()
             thresholdP = 0.54
         end
 
-        -- Logique d'angle de détection
-        local directionToBall = (targetPos - playerPos).Unit
-        local angleToBall = math.deg(math.acos(directionToBall:Dot(Vector3.new(0, 1, 0))))  -- Angle par rapport à l'axe vertical
-
-        local thresholdAngle = 30  -- Ajuste cette valeur pour définir l'angle de détection
-
         -- Vérification si le projectile est dans une position qui peut être parrée
-        if (isHighArc or angleToBall < thresholdAngle) and m > 0 then
-            local o = l - 5
-            local p = o / n
-
-            if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
-                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                parrySound:Play()
-                stats.successfulParries = stats.successfulParries + 1
-                spherePart.Color = Color3.new(0, 1, 0)
-                ero = true
-            else
+        if (isHighArc or m > 0) and (l - 5) / n <= thresholdP and not ero then
+            VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+            parrySound:Play()
+            stats.successfulParries = stats.successfulParries + 1
+            spherePart.Color = Color3.new(0, 1, 0)
+            ero = true
+        else
+            if not isHighArc then
                 stats.failedParries = stats.failedParries + 1
                 spherePart.Color = Color3.new(1, 0, 0)
             end
-        else
             ero = false
         end
 
-        proximityIndicator.Position = Player.Character.PrimaryPart.Position
-
-        local ping = Player:GetNetworkPing()
-        local fps = math.floor(1 / RunService.RenderStepped:Wait())
-        textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
+        -- Mise à jour des statistiques à l'écran
+        textLabel.Text = string.format("Parrys réussis: %d\nParrys échoués: %d", stats.successfulParries, stats.failedParries)
     end)
 
     -- Écouter les événements de changement de personnage
