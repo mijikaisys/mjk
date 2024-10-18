@@ -114,8 +114,6 @@ local function initializeParry()
 
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
         else
-            spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
-            ero = false
             proximityIndicator.Position = Vector3.new(0, -1000, 0)
         end
 
