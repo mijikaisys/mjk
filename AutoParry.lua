@@ -51,13 +51,13 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        -- Ajustement de la taille de la sphère de détection
-        local maxDetectionRadius = math.clamp(velocity / 0.3 + baseDetectionRadius, baseDetectionRadius, baseDetectionRadius + 50)
-        spherePart.Size = Vector3.new(maxDetectionRadius * 2, maxDetectionRadius * 2, maxDetectionRadius * 2)
+        -- Ajustement dynamique de la taille de la sphère de détection
+        local adjustedDetectionRadius = math.clamp(baseDetectionRadius + (velocity / 10), baseDetectionRadius, baseDetectionRadius + 50)
+        spherePart.Size = Vector3.new(adjustedDetectionRadius * 2, adjustedDetectionRadius * 2, adjustedDetectionRadius * 2)
         spherePart.Position = playerPos
         
         -- Vérification de la distance et de la direction du projectile
-        if distance <= maxDetectionRadius then
+        if distance <= adjustedDetectionRadius then
             local directionToBall = (targetPos - playerPos).Unit
             local playerForward = Player.Character.PrimaryPart.CFrame.LookVector
             local angle = math.acos(directionToBall:Dot(playerForward)) * (180 / math.pi)
@@ -88,4 +88,4 @@ Player.CharacterAdded:Connect(function()
 end)
 
 -- Initialiser le parry à la première exécution
-initializeParry()
+initializeParry
