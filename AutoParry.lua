@@ -65,6 +65,10 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
+        -- Ajustement pour prendre en compte la hauteur
+        local heightDifference = targetPos.Y - playerPos.Y
+        local isHighArc = heightDifference > 5  -- Ajuste cette valeur selon le besoin
+
         local maxDetectionRadius = velocity / 0.3
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
@@ -99,7 +103,14 @@ local function initializeParry()
             thresholdP = 0.54
         end
 
-        if m > 0 then
+        -- Logique d'angle de détection
+        local directionToBall = (targetPos - playerPos).Unit
+        local angleToBall = math.deg(math.acos(directionToBall:Dot(Vector3.new(0, 1, 0))))  -- Angle par rapport à l'axe vertical
+
+        local thresholdAngle = 30  -- Ajuste cette valeur pour définir l'angle de détection
+
+        -- Vérification si le projectile est dans une position qui peut être parrée
+        if (isHighArc or angleToBall < thresholdAngle) and m > 0 then
             local o = l - 5
             local p = o / n
 
@@ -118,6 +129,10 @@ local function initializeParry()
         end
 
         proximityIndicator.Position = Player.Character.PrimaryPart.Position
+
+        local ping = Player:GetNetworkPing()
+        local fps = math.floor(1 / RunService.RenderStepped:Wait())
+        textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
     end)
 
     -- Écouter les événements de changement de personnage
