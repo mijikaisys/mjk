@@ -57,7 +57,7 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        if velocity > 205 then
+        if velocity > 330 then
             baseDetectionRadius = math.min(150, baseDetectionRadius * 2)
         end
 
@@ -83,11 +83,11 @@ local function initializeParry()
             local thresholdP = 0.50
 
             if velocity > 220 then
-                thresholdP = 0.55
+                thresholdP = 0.52
             end
 
             if velocity > 500 then
-                thresholdP = 0.56
+                thresholdP = 0.54
             end
 
             if m > 0 then
