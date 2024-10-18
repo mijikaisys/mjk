@@ -53,7 +53,6 @@ local function initializeParry()
 
         local par = parry_helper.FindTargetBall()
         if not par then 
-            proximityIndicator.Position = Vector3.new(0, -1000, 0)  -- Cacher l'indicateur si aucune balle n'est trouvée
             return 
         end
 
@@ -65,36 +64,58 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        -- Ajustement de la taille de la sphère de détection
-        local maxDetectionRadius = math.clamp(velocity / 0.3, baseDetectionRadius, baseDetectionRadius + 50)
-        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius)
+
+        local maxDetectionRadius = velocity / 0.3
+        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
         if distance <= adjustedBaseDetectionRadius then
-            spherePart.Size = Vector3.new(adjustedBaseDetectionRadius * 2, adjustedBaseDetectionRadius * 2, adjustedBaseDetectionRadius * 2)
+            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
+            spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
                 hat = par.zoomies.VectorVelocity
             end
 
-            local hitDirection = (playerPos - targetPos).Unit
-            local isTargetValid = parry_helper.IsPlayerTarget(par)
+            local i = par.Position
+            local j = Player.Character.PrimaryPart.Position
+            local kil = (j - i).Unit
+            local l = Player:DistanceFromCharacter(i)
+            local m = kil:Dot(hat.Unit)
+            local n = hat.Magnitude
 
-            if isTargetValid and hitDirection.Y < 0 then  -- Vérifie si le projectile vient en haut
-                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                parrySound:Play()
-                stats.successfulParries = stats.successfulParries + 1
-                spherePart.Color = Color3.new(0, 1, 0)  -- Couleur de succès
-                ero = true
-            else
-                if not ero then
-                    stats.failedParries = stats.failedParries + 1
-                    spherePart.Color = Color3.new(1, 0, 0)  -- Couleur d'échec
-                end
+            local thresholdP = 0.50
+
+            if velocity > 400 then
+                thresholdP = 0.52
             end
-        end
 
-        proximityIndicator.Position = Player.Character.PrimaryPart.Position
+            if velocity > 800 then
+                thresholdP = 0.54
+            end
+
+            if m > 0 then
+                local o = l - 5
+                local p = o / n
+
+                if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
+                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                    parrySound:Play()
+                    stats.successfulParries = stats.successfulParries + 1
+                    spherePart.Color = Color3.new(0, 1, 0)
+                    ero = true
+                else
+                    stats.failedParries = stats.failedParries + 1
+                    spherePart.Color = Color3.new(1, 0, 0)
+                end
+            else
+                ero = false
+            end
+
+            proximityIndicator.Position = Player.Character.PrimaryPart.Position
+        else
+            proximityIndicator.Position = Vector3.new(0, -1000, 0)
+        end
 
         local ping = Player:GetNetworkPing()
         local fps = math.floor(1 / RunService.RenderStepped:Wait())
