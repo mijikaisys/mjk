@@ -37,14 +37,7 @@ local function initializeParry()
 
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://7108607217"
-
-    local proximityIndicator = Instance.new("Part")
-    proximityIndicator.Size = Vector3.new(5, 5, 5)
-    proximityIndicator.Shape = Enum.PartType.Ball
-    proximityIndicator.Anchored = true
-    proximityIndicator.CanCollide = false 
-    proximityIndicator.Color = Color3.new(1, 1, 0)
-    proximityIndicator.Parent = workspace
+    
 
     RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
