@@ -32,6 +32,7 @@ local function initializeParry()
     textLabel.BackgroundTransparency = 0.5
     textLabel.TextColor3 = Color3.new(1, 1, 1)
     textLabel.TextScaled = true
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left -- Aligner le texte à gauche
     screenGui.Parent = Player.PlayerGui
     textLabel.Parent = screenGui
 
@@ -63,7 +64,6 @@ local function initializeParry()
 
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
-
 
         local maxDetectionRadius = velocity / 0.3
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
