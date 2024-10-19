@@ -90,7 +90,7 @@ local function initializeParry()
                 thresholdP = 0.52
             end
 
-            if velocity > 800 then
+            if velocity > 500 then
                 thresholdP = 0.54
             end
 
