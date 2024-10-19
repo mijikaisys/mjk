@@ -70,7 +70,7 @@ local function initializeParry()
         spherePart.Position = Player.Character.PrimaryPart.Position
 
         local playerPos = Player.Character.PrimaryPart.Position
-        local predictedPosition = predictBallPosition(par, 0.5) -- Prédire la position dans 0.5 secondes
+        local predictedPosition = predictBallPosition(par, 0.1) -- Prédire la position dans 0.5 secondes
         local distance = (predictedPosition - playerPos).Magnitude
 
         local velocity = par.AssemblyLinearVelocity.Magnitude
