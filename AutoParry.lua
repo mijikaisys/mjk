@@ -95,21 +95,22 @@ local function initializeParry()
             end
 
             if velocity > 600 then
-                thresholdP = 0.56
-                end
-             
-            if velocity > 700 then
                 thresholdP = 0.58
-                end
-
-            if m > 0 then
+                
+                if m > 0 then
                 local o = l - 5
                 local p = o / n
 
                 if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     parrySound:Play()
-                    
+                    stats.successfulParries = stats.successfulParries + 1
+                    spherePart.Color = Color3.new(1, 0, 0)
+                    ero = true
+                else
+                    stats.failedParries = stats.failedParries + 1
+                    spherePart.Color = Color3.new(0, 1, 0)
+                end
             else
                 ero = false
             end
@@ -121,7 +122,7 @@ local function initializeParry()
 
         local ping = Player:GetNetworkPing()
         local fps = math.floor(1 / RunService.RenderStepped:Wait())
-        textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity)
+        textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
     end)
 end
 
