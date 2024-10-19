@@ -46,6 +46,17 @@ local function initializeParry()
     proximityIndicator.Color = Color3.new(0, 0, 0)
     proximityIndicator.Parent = workspace
 
+    local function predictBallPosition(ball, time)
+        local currentPosition = ball.Position
+        local velocity = ball.AssemblyLinearVelocity
+        return currentPosition + (velocity * time)
+    end
+
+    local function getDynamicDetectionRadius(velocity)
+        local maxDetectionRadius = math.clamp(velocity / 0.3, baseDetectionRadius, baseDetectionRadius + 30)
+        return maxDetectionRadius
+    end
+
     RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
             return 
@@ -59,17 +70,14 @@ local function initializeParry()
         spherePart.Position = Player.Character.PrimaryPart.Position
 
         local playerPos = Player.Character.PrimaryPart.Position
-        local targetPos = par.Position
+        local predictedPosition = predictBallPosition(par, 0.5) -- Prédire la position dans 0.5 secondes
+        local distance = (predictedPosition - playerPos).Magnitude
 
-        local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
+        local adjustedDetectionRadius = getDynamicDetectionRadius(velocity)
 
-
-        local maxDetectionRadius = velocity / 0.3
-        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
-
-        if distance <= adjustedBaseDetectionRadius then
-            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
+        if distance <= adjustedDetectionRadius then
+            local newSize = math.clamp(adjustedDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedDetectionRadius)
             spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
 
             local hat = par.AssemblyLinearVelocity
