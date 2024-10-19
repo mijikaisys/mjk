@@ -94,6 +94,14 @@ local function initializeParry()
                 thresholdP = 0.54
             end
 
+            if velocity > 600 then
+                thresholdP = 0.56
+                end
+             
+            if velocity > 700 then
+                thresholdP = 0.58
+                end
+
             if m > 0 then
                 local o = l - 5
                 local p = o / n
