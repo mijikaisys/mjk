@@ -20,16 +20,6 @@ local function initializeParry()
     spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
     spherePart.Parent = workspace
 
-    local screenGui = Instance.new("ScreenGui")
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Size = UDim2.new(0, 200, 0, 100)
-    textLabel.Position = UDim2.new(0.8, 0, 0, 0)
-    textLabel.BackgroundTransparency = 0.5
-    textLabel.TextColor3 = Color3.new(1, 1, 1)
-    textLabel.TextScaled = true
-    screenGui.Parent = Player.PlayerGui
-    textLabel.Parent = screenGui
-
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://7108607217"
 
@@ -59,7 +49,6 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-
         local maxDetectionRadius = velocity / 0.3
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
@@ -85,7 +74,7 @@ local function initializeParry()
                 thresholdP = 0.52
             end
 
-            if velocity > 500 then
+            if velocity > 800 then
                 thresholdP = 0.54
             end
 
@@ -96,12 +85,10 @@ local function initializeParry()
                 if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     parrySound:Play()
-                    stats.successfulParries = stats.successfulParries + 1
-                    spherePart.Color = Color3.new(0, 1, 0)
+                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
                 else
-                    stats.failedParries = stats.failedParries + 1
-                    spherePart.Color = Color3.new(1, 0, 0)
+                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                 end
             else
                 ero = false
@@ -111,10 +98,6 @@ local function initializeParry()
         else
             proximityIndicator.Position = Vector3.new(0, -1000, 0)
         end
-
-        local ping = Player:GetNetworkPing()
-        local fps = math.floor(1 / RunService.RenderStepped:Wait())
-        textLabel.Text = string.format("Ping: %d ms\nFPS: %d\nVitesse: %.2f\nParrys réussis: %d\nParrys échoués: %d", ping, fps, velocity, stats.successfulParries, stats.failedParries)
     end)
 end
 
