@@ -49,7 +49,7 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        local maxDetectionRadius = velocity
+        local maxDetectionRadius = velocity / 0.3
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
         if distance <= adjustedBaseDetectionRadius then
@@ -69,8 +69,8 @@ local function initializeParry()
             local n = hat.Magnitude
 
             local baseThreshold = 0.50
-            local thresholdIncrement = 0.03-- Incrément pour chaque 100 unités de vitesse
-            local maxThreshold = 0.6 -- Nouvelle limite supérieure
+            local thresholdIncrement = 0.02 -- Incrément pour chaque 100 unités de vitesse
+            local maxThreshold = 0.7 -- Nouvelle limite supérieure
 
 -- Calculer le seuil basé sur la vitesse
             local thresholdP = baseThreshold + math.min((velocity / 100) * thresholdIncrement, maxThreshold - baseThreshold)
@@ -83,13 +83,13 @@ local function initializeParry()
                 if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     parrySound:Play()
-                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry successful
-                    ero = true 
+                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
+                    ero = true
                 else
-                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry failed
+                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                 end
             else
-                ero = false 
+                ero = false
             end
 
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
