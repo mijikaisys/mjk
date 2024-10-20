@@ -70,7 +70,7 @@ local function initializeParry()
 
             local baseThreshold = 0.50
             local thresholdIncrement = 0.03-- Incrément pour chaque 100 unités de vitesse
-            local maxThreshold = 0.9 -- Nouvelle limite supérieure
+            local maxThreshold = 0.6 -- Nouvelle limite supérieure
 
 -- Calculer le seuil basé sur la vitesse
             local thresholdP = baseThreshold + math.min((velocity / 100) * thresholdIncrement, maxThreshold - baseThreshold)
@@ -89,7 +89,7 @@ local function initializeParry()
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                 end
             else
-                ero = false
+                ero = true
             end
 
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
