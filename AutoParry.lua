@@ -84,12 +84,12 @@ local function initializeParry()
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     parrySound:Play()
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
-                    ero = true
+                    ero = false 
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                 end
             else
-                ero = true
+                ero = false 
             end
 
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
