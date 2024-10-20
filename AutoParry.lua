@@ -8,11 +8,6 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 
 local function initializeParry()
     local ero = false
-    local stats = {
-        successfulParries = 0,
-        failedParries = 0,
-    }
-
     local baseDetectionRadius = 20
 
     local spherePart = Instance.new("Part")
@@ -22,7 +17,7 @@ local function initializeParry()
     spherePart.CanCollide = false
     spherePart.Material = Enum.Material.ForceField
     spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-    spherePart.Transparency = 0.5
+    spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
     spherePart.Parent = workspace
 
     local screenGui = Instance.new("ScreenGui")
