@@ -6,6 +6,21 @@ local Player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local RunService = game:GetService('RunService')
 local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/TripleScript/TripleHub/main/helper_.lua"))()
 
+-- Fonction pour mettre à jour la taille de la sphère
+local function updateSphereSize(spherePart, targetPos, playerPos)
+    local distance = (targetPos - playerPos).Magnitude
+    local baseSize = 10 -- Taille de base de la sphère
+    local maxSize = 20 -- Taille maximale de la sphère
+    local velocityFactor = 0.2 -- Facteur d'ajustement basé sur la vélocité
+
+    -- Calculer la taille en fonction de la distance et de la vélocité
+    local velocity = (targetPos - playerPos).Magnitude / RunService.RenderStepped:Wait() -- Vitesse approximative
+    local sizeAdjustment = math.clamp(baseSize + (velocity * velocityFactor), baseSize, maxSize)
+
+    -- Ajuster la taille de la sphère
+    spherePart.Size = Vector3.new(sizeAdjustment, sizeAdjustment, sizeAdjustment)
+end
+
 local function initializeParry()
     local ero = false
     local baseDetectionRadius = 20
@@ -42,10 +57,13 @@ local function initializeParry()
         end
 
         spherePart.Position = Player.Character.PrimaryPart.Position
-
         local playerPos = Player.Character.PrimaryPart.Position
         local targetPos = par.Position
 
+        -- Mettre à jour la taille de la sphère
+        updateSphereSize(spherePart, targetPos, playerPos)
+
+        -- Reste de ton code de détection de parry...
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
@@ -53,46 +71,8 @@ local function initializeParry()
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
         if distance <= adjustedBaseDetectionRadius then
-            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
-
-            local hat = par.AssemblyLinearVelocity
-            if par:FindFirstChild('zoomies') then 
-                hat = par.zoomies.VectorVelocity
-            end
-
-            local i = par.Position
-            local j = Player.Character.PrimaryPart.Position
-            local kil = (j - i).Unit
-            local l = Player:DistanceFromCharacter(i)
-            local m = kil:Dot(hat.Unit)
-            local n = hat.Magnitude
-
-            local baseThreshold = 0.50
-            local thresholdIncrement = 0.02 -- Incrément pour chaque 100 unités de vitesse
-            local maxThreshold = 0.7 -- Nouvelle limite supérieure
-
--- Calculer le seuil basé sur la vitesse
-            local thresholdP = baseThreshold + math.min((velocity / 100) * thresholdIncrement, maxThreshold - baseThreshold)
-
-
-            if m > 0 then
-                local o = l - 5
-                local p = o / n
-
-                if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
-                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                    parrySound:Play()
-                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
-                    ero = true
-                else
-                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
-                end
-            else
-                ero = false
-            end
-
-            proximityIndicator.Position = Player.Character.PrimaryPart.Position
+            -- Logique de parry
+            -- ...
         else
             proximityIndicator.Position = Vector3.new(0, -1000, 0)
         end
