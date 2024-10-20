@@ -83,10 +83,10 @@ local function initializeParry()
                 if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     parrySound:Play()
-                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
-                    ero = false 
+                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry successful
+                    ero = true 
                 else
-                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
+                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry failed
                 end
             else
                 ero = false 
