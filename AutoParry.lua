@@ -69,8 +69,8 @@ local function initializeParry()
             local n = hat.Magnitude
 
             local baseThreshold = 0.55
-            local thresholdIncrement = 0.1-- Incrément pour chaque 100 unités de vitesse
-            local maxThreshold = 1 -- Nouvelle limite supérieure
+            local thresholdIncrement = 0.5 -- Incrément pour chaque 100 unités de vitesse
+            local maxThreshold = 5 -- Nouvelle limite supérieure
 
 -- Calculer le seuil basé sur la vitesse
             local thresholdP = baseThreshold + math.min((velocity / 100) * thresholdIncrement, maxThreshold - baseThreshold)
