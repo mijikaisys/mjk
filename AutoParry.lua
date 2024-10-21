@@ -54,7 +54,7 @@ local function initializeParry()
 
         if distance <= adjustedBaseDetectionRadius then
             local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
+            spherePart.Size = Vector3.new(newSize * 2.5, newSize * 2.5, newSize * 2.5)
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
