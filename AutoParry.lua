@@ -21,7 +21,7 @@ local function initializeParry()
     spherePart.Parent = workspace
 
     local parrySound = Instance.new("Sound", Player.Character)
-    parrySound.SoundId = "rbxassetid://5749433758"
+    parrySound.SoundId = "rbxassetid://671479685"
 
     local proximityIndicator = Instance.new("Part")
     proximityIndicator.Size = Vector3.new(5, 5, 5)
