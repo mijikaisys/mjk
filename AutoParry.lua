@@ -70,7 +70,7 @@ local function initializeParry()
 
 
 -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.55 * (1 + 0.2 * velocity)
+            local thresholdP = 0.55 * (1 + 0.5 * velocity)
 
 
             if m > 0 then
