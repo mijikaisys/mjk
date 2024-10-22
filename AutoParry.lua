@@ -68,12 +68,9 @@ local function initializeParry()
             local m = kil:Dot(hat.Unit)
             local n = hat.Magnitude
 
-            local baseThreshold = 0.55 * (1 + 0.05 * velocity)
-            local thresholdIncrement = 0.5 -- Incrément pour chaque 100 unités de vitesse
-            local maxThreshold = 5 -- Nouvelle limite supérieure
 
 -- Calculer le seuil basé sur la vitesse
-            local thresholdP = baseThreshold + math.min((velocity / 100) * thresholdIncrement, maxThreshold - baseThreshold)
+            local thresholdP = 0.55 * (1 + 0.2 * velocity)
 
 
             if m > 0 then
