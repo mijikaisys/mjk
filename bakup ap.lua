@@ -21,7 +21,7 @@ local function initializeParry()
     spherePart.Parent = workspace
 
     local parrySound = Instance.new("Sound", Player.Character)
-    parrySound.SoundId = "rbxassetid://7108607217"
+    parrySound.SoundId = "rbxassetid://5433158470"
 
     local proximityIndicator = Instance.new("Part")
     proximityIndicator.Size = Vector3.new(5, 5, 5)
@@ -49,12 +49,12 @@ local function initializeParry()
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
-        local maxDetectionRadius = velocity / 0.3
+        local maxDetectionRadius = velocity / 0.15
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
         if distance <= adjustedBaseDetectionRadius then
             local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 2, newSize * 2, newSize * 2)
+            spherePart.Size = Vector3.new(newSize * 2.5, newSize * 2.5, newSize * 2.5)
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
@@ -68,12 +68,9 @@ local function initializeParry()
             local m = kil:Dot(hat.Unit)
             local n = hat.Magnitude
 
-            local baseThreshold = 0.50
-            local thresholdIncrement = 0.02 -- Incrément pour chaque 100 unités de vitesse
-            local maxThreshold = 0.7 -- Nouvelle limite supérieure
 
 -- Calculer le seuil basé sur la vitesse
-            local thresholdP = baseThreshold + math.min((velocity / 100) * thresholdIncrement, maxThreshold - baseThreshold)
+            local thresholdP = 0.55 * (1 + 0.5 * velocity)
 
 
             if m > 0 then
