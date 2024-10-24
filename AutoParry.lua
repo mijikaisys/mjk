@@ -13,7 +13,7 @@ local function initializeParry()
     local parryInterval = 0.35 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
     local spamStartTime = 0
-    local spamDuration = 0.15 -- Durée pendant laquelle l'autospam est actif
+    local spamDuration = 0.161 -- Durée pendant laquelle l'autospam est actif
     local autoSpamInterval = 0.1 -- Intervalle entre les parries automatiques
 
     local parrySound = Instance.new("Sound", Player.Character)
