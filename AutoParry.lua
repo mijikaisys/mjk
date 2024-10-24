@@ -13,7 +13,7 @@ local function initializeParry()
     local parryInterval = 0.3 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
     local spamStartTime = 0
-    local spamDuration = 0.5 -- Durée pendant laquelle l'autospam est actif
+    local spamDuration = 0.1 -- Durée pendant laquelle l'autospam est actif
 
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
