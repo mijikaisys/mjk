@@ -6,6 +6,15 @@ local Player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local RunService = game:GetService('RunService')
 local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/TripleScript/TripleHub/main/helper_.lua"))()
 
+-- Détection du RemoteEvent
+local hitremote
+for _, v in next, game:GetDescendants() do
+    if v and v.Name:find("\n") and v:IsA("RemoteEvent") then
+        hitremote = v
+        break
+    end
+end
+
 local function initializeParry()
     local ero = false
     local baseDetectionRadius = 20
@@ -17,7 +26,6 @@ local function initializeParry()
 
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
-
 
     local spherePart = Instance.new("Part")
     spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
@@ -89,7 +97,15 @@ local function initializeParry()
                         spamStartTime = currentTime
                     end
 
-                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                    -- Remplacer l'appel par hitremote
+                    local args = {
+                        0.5, -- Délai ou paramètre
+                        CFrame.new(playerPos), -- Utiliser la position du joueur
+                        {}, -- Remplir avec les joueurs cibles ou autres
+                        {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
+                        false
+                    }
+                    hitremote:FireServer(unpack(args)) -- Appeler hitremote
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
                     lastParryTime = currentTime
@@ -112,9 +128,16 @@ local function initializeParry()
         if autoSpamActive then
             local currentTime = tick()
             if currentTime - spamStartTime < spamDuration then
-                -- Effectuer un parry automatique
-                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                    wait()
+                -- Effectuer un parry automatique avec hitremote
+                local args = {
+                    0.5, -- Délai ou paramètre
+                    CFrame.new(playerPos), -- Utiliser la position du joueur
+                    {}, -- Remplir avec les joueurs cibles ou autres
+                    {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
+                    false
+                }
+                hitremote:FireServer(unpack(args)) -- Appeler hitremote
+                wait()
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
                 ero = false 
