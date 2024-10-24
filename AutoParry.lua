@@ -59,7 +59,7 @@ local function initializeParry()
 
         if distance <= adjustedBaseDetectionRadius then
             local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 5.5, newSize * 5.5, newSize * 5.5) -- Augmenter le facteur d'échelle ici
+            spherePart.Size = Vector3.new(newSize * 115.5, newSize * 115.5, newSize * 115.5) -- Augmenter le facteur d'échelle ici
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
@@ -113,6 +113,7 @@ local function initializeParry()
             if currentTime - spamStartTime < spamDuration then
                 -- Effectuer un parry automatique
                 VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                    wait()
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
                 ero = false 
