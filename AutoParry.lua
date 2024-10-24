@@ -25,7 +25,7 @@ local function initializeParry()
     spherePart.CanCollide = false
     spherePart.Material = Enum.Material.ForceField
     spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-    spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
+    spherePart.Transparency = 0.99 -- Rend la sphère presque invisible
     spherePart.Parent = workspace
 
     local proximityIndicator = Instance.new("Part")
@@ -59,7 +59,7 @@ local function initializeParry()
 
         if distance <= adjustedBaseDetectionRadius then
             local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 3.5, newSize * 3.5, newSize * 3.5)
+            spherePart.Size = Vector3.new(newSize * 30.5, newSize * 30.5, newSize * 30.5)
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
@@ -74,7 +74,7 @@ local function initializeParry()
             local n = hat.Magnitude
 
             -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.52 * (1 + 0.6 * velocity)
+            local thresholdP = 0.50 * (1 + 0.4 * velocity)
 
             if m > 0 then
                 local o = l - 5
