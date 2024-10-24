@@ -71,10 +71,7 @@ local function initializeParry()
             -- Calculer le seuil basé sur la vitesse
             local thresholdP = 0.55 * (1 + 0.5 * velocity)
 
-            -- Vérifier si le personnage du joueur existe et est vivant
-            if Player.Character and Player.Character:FindFirstChild("Humanoid") and Player.Character.Humanoid.Health > 0 then
-                -- Vérifier si le joueur n'est plus visé par la balle
-                if not parry_helper.IsPlayerTarget(par) then
+            if parry_helper.IsPlayerTarget(par) then
                     return -- Si le joueur n'est pas visé, ne pas tenter de parry
                 end
 
