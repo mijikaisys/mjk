@@ -6,9 +6,26 @@ local Player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local RunService = game:GetService('RunService')
 local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/TripleScript/TripleHub/main/helper_.lua"))()
 
+-- Détection du RemoteEvent
+local hitremote
+for _, v in next, game:GetDescendants() do
+    if v and v.Name:find("\n") and v:IsA("RemoteEvent") then
+        hitremote = v
+        break
+    end
+end
+
 local function initializeParry()
     local ero = false
     local baseDetectionRadius = 20
+    local lastParryTime = 0
+    local parryInterval = 0.35 -- Intervalle en secondes entre chaque parry
+    local autoSpamActive = false
+    local spamStartTime = 0
+    local spamDuration = 0.15 -- Durée pendant laquelle l'autospam est actif
+
+    local parrySound = Instance.new("Sound", Player.Character)
+    parrySound.SoundId = "rbxassetid://5433158470"
 
     local spherePart = Instance.new("Part")
     spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
@@ -19,9 +36,6 @@ local function initializeParry()
     spherePart.Color = Color3.new(0.2, 0.2, 0.5)
     spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
     spherePart.Parent = workspace
-
-    local parrySound = Instance.new("Sound", Player.Character)
-    parrySound.SoundId = "rbxassetid://5433158470"
 
     local proximityIndicator = Instance.new("Part")
     proximityIndicator.Size = Vector3.new(5, 5, 5)
@@ -54,7 +68,7 @@ local function initializeParry()
 
         if distance <= adjustedBaseDetectionRadius then
             local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 2.5, newSize * 2.5, newSize * 2.5)
+            spherePart.Size = Vector3.new(newSize * 115.5, newSize * 115.5, newSize * 115.5) -- Augmenter le facteur d'échelle ici
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
@@ -68,30 +82,66 @@ local function initializeParry()
             local m = kil:Dot(hat.Unit)
             local n = hat.Magnitude
 
-
--- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.55 * (1 + 0.5 * velocity)
-
+            -- Calculer le seuil basé sur la vitesse
+            local thresholdP = 0.54 * (1 + 0.4 * velocity)
 
             if m > 0 then
                 local o = l - 5
                 local p = o / n
 
                 if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
-                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                    parrySound:Play()
+                    local currentTime = tick()
+                    if currentTime - lastParryTime < parryInterval then
+                        -- Activer l'autospam si la fréquence est rapide
+                        autoSpamActive = true
+                        spamStartTime = currentTime
+                    end
+
+                    -- Remplacer l'appel par hitremote
+                    local args = {
+                        0.5, -- Délai ou paramètre
+                        CFrame.new(playerPos), -- Utiliser la position du joueur
+                        {}, -- Remplir avec les joueurs cibles ou autres
+                        {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
+                        false
+                    }
+                    hitremote:FireServer(unpack(args)) -- Appeler hitremote
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
+                    lastParryTime = currentTime
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                 end
             else
-                ero = false
+                if ero then
+                    parrySound:Play()
+                    ero = false -- Réinitialiser ero pour permettre un nouveau parry
+                end
             end
 
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
         else
             proximityIndicator.Position = Vector3.new(0, -1000, 0)
+        end
+
+        -- Gestion de l'autospam
+        if autoSpamActive then
+            local currentTime = tick()
+            if currentTime - spamStartTime < spamDuration then
+                -- Effectuer un parry automatique avec hitremote
+                local args = {
+                    0.5, -- Délai ou paramètre
+                    CFrame.new(playerPos), -- Utiliser la position du joueur
+                    {}, -- Remplir avec les joueurs cibles ou autres
+                    {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
+                    false
+                }
+                hitremote:FireServer(unpack(args)) -- Appeler hitremote
+                wait()
+            else
+                autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
+                ero = false 
+            end
         end
     end)
 end
