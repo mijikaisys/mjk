@@ -130,7 +130,7 @@ local function initializeParry()
             if currentTime - spamStartTime < spamDuration then
                 -- Effectuer un parry automatique avec hitremote
                 local args = {
-                    5, -- Délai ou paramètre
+                    0, -- Délai ou paramètre
                     CFrame.new(playerPos), -- Utiliser la position du joueur
                     {random}, -- Remplir avec les joueurs cibles ou autres
                     {math.random(1000, 1000), math.random(1000, 1000)}, -- Valeurs aléatoires
@@ -146,8 +146,7 @@ local function initializeParry()
 end
 
 -- Écouter les événements de changement de personnage
-Player.CharacterAdded:Connect(function()
-    wait()  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
+Player.CharacterAdded:Connect(function()  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
     initializeParry()  -- Réinitialiser le parry à chaque respawn
 end)
 
