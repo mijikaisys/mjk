@@ -18,42 +18,6 @@ local function initializeParry()
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
 
-    -- Fonction pour trouver le RemoteEvent
-local hitremote
-for p,v in next, game:GetDescendants() do
-    if v and v.Name:find("\n") and v:IsA("RemoteEvent") then
-        hitremote = v
-        break
-    end
-end
-
-local debounce = false
-local manualspamspeed = 5 -- Nombre de fois que le RemoteEvent sera appelé
-
--- Fonction pour déclencher le RemoteEvent
-local function fireHitRemote()
-    if debounce then return end
-    debounce = true
-    delay(0.05, function() debounce = false end)
-    
-    for p = 1, manualspamspeed do
-        local args = {
-            [1] = 0.5,
-            [2] = CFrame.new(math.random(-10, 10), 0, math.random(-10, 10)), -- Exemple de CFrame aléatoire
-            [3] = {}, -- Remplir avec les joueurs cibles ou autres
-            [4] = {
-                [1] = math.random(200, 500),
-                [2] = math.random(100, 200)
-            },
-            [5] = false
-        }
-        hitremote:FireServer(unpack(args))
-    end
-end
-
--- Connecter la fonction au clic du bouton
-Button.MouseButton1Click:Connect(fireHitRemote)
-
 
     local spherePart = Instance.new("Part")
     spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
