@@ -17,7 +17,7 @@ end
 
 local function initializeParry()
     local ero = false
-    local baseDetectionRadius = 25
+    local baseDetectionRadius = 20
     local lastParryTime = 0
     local parryInterval = 0.35 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
