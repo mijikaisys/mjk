@@ -10,7 +10,7 @@ local function initializeParry()
     local ero = false
     local baseDetectionRadius = 20
     local lastParryTime = 0
-    local parryInterval = 0.3 -- Intervalle en secondes entre chaque parry
+    local parryInterval = 0.35 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
     local spamStartTime = 0
     local spamDuration = 0.15 -- Durée pendant laquelle l'autospam est actif
@@ -74,7 +74,7 @@ local function initializeParry()
             local n = hat.Magnitude
 
             -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.57 * (1 + 0.6 * velocity)
+            local thresholdP = 0.585 * (1 + 0.6 * velocity)
 
             if m > 0 then
                 local o = l - 5
