@@ -139,9 +139,11 @@ local function initializeParry()
                     false
                 }
                 hitremote:FireServer(unpack(args)) -- Appeler hitremote
+                getgenv().autoparry = false 
                 wait()
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
+                getgenv().autoparry = true 
                 ero = false 
             end
         end
