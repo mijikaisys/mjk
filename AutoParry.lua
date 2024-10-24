@@ -14,6 +14,7 @@ local function initializeParry()
     local autoSpamActive = false
     local spamStartTime = 0
     local spamDuration = 0.15 -- Durée pendant laquelle l'autospam est actif
+    local autoSpamInterval = 0.1 -- Intervalle entre les parries automatiques
 
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
@@ -25,7 +26,7 @@ local function initializeParry()
     spherePart.CanCollide = false
     spherePart.Material = Enum.Material.ForceField
     spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-    spherePart.Transparency = 0.99 -- Rend la sphère presque invisible
+    spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
     spherePart.Parent = workspace
 
     local proximityIndicator = Instance.new("Part")
@@ -59,7 +60,7 @@ local function initializeParry()
 
         if distance <= adjustedBaseDetectionRadius then
             local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 30.5, newSize * 30.5, newSize * 30.5)
+            spherePart.Size = Vector3.new(newSize * 3.5, newSize * 3.5, newSize * 3.5)
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
@@ -74,7 +75,7 @@ local function initializeParry()
             local n = hat.Magnitude
 
             -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.50 * (1 + 0.4 * velocity)
+            local thresholdP = 0.50 * (1 + 0.6 * velocity)
 
             if m > 0 then
                 local o = l - 5
@@ -111,12 +112,15 @@ local function initializeParry()
         if autoSpamActive then
             local currentTime = tick()
             if currentTime - spamStartTime < spamDuration then
-                -- Effectuer un parry automatique
-                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                -- Effectuer un parry automatique avec un intervalle
+                if (currentTime - lastParryTime) >= autoSpamInterval then
+                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                    lastParryTime = currentTime -- Mettre à jour le temps du dernier parry
+                end
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
-                    ero = false 
-                end
+                ero = false 
+            end
         end
     end)
 end
