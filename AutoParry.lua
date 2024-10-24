@@ -102,7 +102,6 @@ local function initializeParry()
                         0.5, -- Délai ou paramètre
                         CFrame.new(playerPos), -- Utiliser la position du joueur
                         {}, -- Remplir avec les joueurs cibles ou autres
-                        {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
                         false
                     }
                     hitremote:FireServer(unpack(args)) -- Appeler hitremote
@@ -133,7 +132,6 @@ local function initializeParry()
                     0.5, -- Délai ou paramètre
                     CFrame.new(playerPos), -- Utiliser la position du joueur
                     {}, -- Remplir avec les joueurs cibles ou autres
-                    {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
                     false
                 }
                 hitremote:FireServer(unpack(args)) -- Appeler hitremote
