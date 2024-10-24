@@ -137,7 +137,6 @@ local function initializeParry()
                     false
                 }
                 hitremote:FireServer(unpack(args)) -- Appeler hitremote
-                wait()
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
                 ero = false 
