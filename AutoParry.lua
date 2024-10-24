@@ -109,13 +109,16 @@ local function initializeParry()
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
                     lastParryTime = currentTime
+                    wait()
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
+                        wait()
                 end
             else
                 if ero then
                     parrySound:Play()
                     ero = false -- Réinitialiser ero pour permettre un nouveau parry
+                        wait()
                 end
             end
 
