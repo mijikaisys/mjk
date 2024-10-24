@@ -17,7 +17,7 @@ local function initializeParry()
     spherePart.CanCollide = false
     spherePart.Material = Enum.Material.ForceField
     spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-    spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
+    spherePart.Transparency = 0.95
     spherePart.Parent = workspace
 
     local parrySound = Instance.new("Sound", Player.Character)
@@ -68,28 +68,36 @@ local function initializeParry()
             local m = kil:Dot(hat.Unit)
             local n = hat.Magnitude
 
-
--- Calculer le seuil basé sur la vitesse
+            -- Calculer le seuil basé sur la vitesse
             local thresholdP = 0.55 * (1 + 0.5 * velocity)
 
-
-            if m > 0 then
-                local o = l - 5
-                local p = o / n
-
-                if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
-                    VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                    parrySound:Play()
-                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
-                    ero = true
-                else
-                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
+            -- Vérifier si le personnage du joueur existe et est vivant
+            if Player.Character and Player.Character:FindFirstChild("Humanoid") and Player.Character.Humanoid.Health > 0 then
+                -- Vérifier si le joueur n'est plus visé par la balle
+                if not parry_helper.IsPlayerTarget(par) then
+                    return -- Si le joueur n'est pas visé, ne pas tenter de parry
                 end
-            else
-                ero = false
-            end
 
-            proximityIndicator.Position = Player.Character.PrimaryPart.Position
+                if m > 0 then
+                    local o = l - 5
+                    local p = o / n
+
+                    if p <= thresholdP and not ero then
+                        VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                        parrySound:Play()
+                        spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
+                        ero = true
+                    else
+                        spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
+                    end
+                else
+                    ero = false
+                end
+
+                proximityIndicator.Position = Player.Character.PrimaryPart.Position
+            else
+                proximityIndicator.Position = Vector3.new(0, -1000, 0) -- Si le joueur est mort, cacher l'indicateur
+            end
         else
             proximityIndicator.Position = Vector3.new(0, -1000, 0)
         end
@@ -98,7 +106,7 @@ end
 
 -- Écouter les événements de changement de personnage
 Player.CharacterAdded:Connect(function()
-    wait(1)  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
+    wait()  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
     initializeParry()  -- Réinitialiser le parry à chaque respawn
 end)
 
