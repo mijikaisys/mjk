@@ -13,7 +13,7 @@ local function initializeParry()
     local parryInterval = 0.3 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
     local spamStartTime = 0
-    local spamDuration = 0.111 -- Durée pendant laquelle l'autospam est actif
+    local spamDuration = 0.15 -- Durée pendant laquelle l'autospam est actif
 
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
@@ -114,10 +114,10 @@ local function initializeParry()
             if currentTime - spamStartTime < spamDuration then
                 -- Effectuer un parry automatique
                 VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                parrySound:Play()
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
-            end
+                    ero = false 
+                end
         end
     end)
 end
