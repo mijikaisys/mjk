@@ -1,4 +1,3 @@
-
 getgenv().autoparry = true
 
 local VirtualManager = game:GetService("VirtualInputManager")
@@ -10,6 +9,12 @@ local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/
 local function initializeParry()
     local ero = false
     local baseDetectionRadius = 20
+    local lastParryTime = 0
+    local parryInterval = 0.3 -- Intervalle en secondes entre chaque parry
+    local autoSpamActive = false
+    local spamStartTime = 0
+    local spamDuration = 2 -- Durée pendant laquelle l'autospam est actif
+
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
 
@@ -76,15 +81,23 @@ local function initializeParry()
                 local p = o / n
 
                 if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
+                    local currentTime = tick()
+                    if currentTime - lastParryTime < parryInterval then
+                        -- Activer l'autospam si la fréquence est rapide
+                        autoSpamActive = true
+                        spamStartTime = currentTime
+                    end
+
                     VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
+                    parrySound:Play()
                     ero = true
+                    lastParryTime = currentTime
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                 end
             else
                 if ero then
-                    -- Si le joueur n'est plus visé par la balle, jouer le son
                     parrySound:Play()
                     ero = false -- Réinitialiser ero pour permettre un nouveau parry
                 end
@@ -93,6 +106,18 @@ local function initializeParry()
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
         else
             proximityIndicator.Position = Vector3.new(0, -1000, 0)
+        end
+
+        -- Gestion de l'autospam
+        if autoSpamActive then
+            local currentTime = tick()
+            if currentTime - spamStartTime < spamDuration then
+                -- Effectuer un parry automatique
+                VirtualManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+                parrySound:Play()
+            else
+                autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
+            end
         end
     end)
 end
