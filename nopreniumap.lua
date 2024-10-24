@@ -10,10 +10,10 @@ local function initializeParry()
     local ero = false
     local baseDetectionRadius = 20
     local lastParryTime = 0
-    local parryInterval = 0.35 -- Intervalle en secondes entre chaque parry
+    local parryInterval = 0.252 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
     local spamStartTime = 0
-    local spamDuration = 0.15 -- Durée pendant laquelle l'autospam est actif
+    local spamDuration = 0.17 -- Durée pendant laquelle l'autospam est actif
 
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
@@ -60,7 +60,7 @@ local function initializeParry()
 
         if distance <= adjustedBaseDetectionRadius then
             local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 115.5, newSize * 115.5, newSize * 115.5) -- Augmenter le facteur d'échelle ici
+            spherePart.Size = Vector3.new(newSize * 1115.5, newSize * 1115.5, newSize * 1115.5) -- Augmenter le facteur d'échelle ici
 
             local hat = par.AssemblyLinearVelocity
             if par:FindFirstChild('zoomies') then 
@@ -75,7 +75,7 @@ local function initializeParry()
             local n = hat.Magnitude
 
             -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.54 * (1 + 0.4 * velocity)
+            local thresholdP = 0.48 * (1 + 0.1 * velocity)
 
             if m > 0 then
                 local o = l - 5
@@ -83,7 +83,7 @@ local function initializeParry()
 
                 if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
                     local currentTime = tick()
-                    if currentTime - lastParryTime < parryInterval then
+                    if currentTime - lastParryTime <= parryInterval then
                         -- Activer l'autospam si la fréquence est rapide
                         autoSpamActive = true
                         spamStartTime = currentTime
