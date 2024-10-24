@@ -99,7 +99,7 @@ local function initializeParry()
 
                     -- Remplacer l'appel par hitremote
                     local args = {
-                        0.1, -- Délai ou paramètre
+                        0.5, -- Délai ou paramètre
                         CFrame.new(playerPos), -- Utiliser la position du joueur
                         {}, -- Remplir avec les joueurs cibles ou autres
                         {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
@@ -130,7 +130,7 @@ local function initializeParry()
             if currentTime - spamStartTime < spamDuration then
                 -- Effectuer un parry automatique avec hitremote
                 local args = {
-                    0.1, -- Délai ou paramètre
+                    0.5, -- Délai ou paramètre
                     CFrame.new(playerPos), -- Utiliser la position du joueur
                     {}, -- Remplir avec les joueurs cibles ou autres
                     {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
