@@ -16,17 +16,6 @@ for _, v in next, game:GetDescendants() do
     end
 end
 
--- Résolution du RemoteEvent pour le parry
-local parry_remote = nil
-local function resolveParryRemote()
-    for _, v in pairs(ReplicatedStorage:GetChildren()) do
-        if v:IsA("RemoteEvent") and v.Name:find("\n") then
-            parry_remote = v
-            break
-        end
-    end
-end
-
 -- Fonction pour détecter la balle la plus proche
 local function getClosestBall()
     return workspace:FindFirstChild("Balls"):FindFirstChildOfClass("Part")
@@ -54,12 +43,6 @@ local function initializeParry()
     local baseDetectionRadius = 20
     local lastParryTime = 0
     local parryInterval = 0.252 -- Intervalle en secondes entre chaque parry
-    local autoSpamActive = false
-    local spamStartTime = 0
-    local spamDuration = 0.2 -- Durée pendant laquelle l'autospam est actif
-
-    local parrySound = Instance.new("Sound", Player.Character)
-    parrySound.SoundId = "rbxassetid://5433158470"
 
     RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
@@ -68,6 +51,7 @@ local function initializeParry()
 
         local par = parry_helper.FindTargetBall()
         if not par then 
+            ero = false -- Réinitialiser si aucune cible n'est trouvée
             return 
         end
 
@@ -76,44 +60,28 @@ local function initializeParry()
 
         local distance = (targetPos - playerPos).Magnitude
         local velocity = par.AssemblyLinearVelocity.Magnitude
-
         local maxDetectionRadius = velocity / 0.15
-        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
 
-        if distance <= adjustedBaseDetectionRadius then
-            -- Appel à hitremote
-            local targetCFrame = CFrame.new(playerPos, targetPos) -- Utiliser le CFrame orienté vers la cible
-            local args = {
-                0.5, -- Délai ou paramètre
-                targetCFrame, -- Utiliser le CFrame orienté vers la cible
-                {}, -- Remplir avec les joueurs cibles ou autres
-                {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
-                false
-            }
-            hitremote:FireServer(unpack(args)) -- Appeler hitremote
-            spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
-            ero = true
-            lastParryTime = tick() -- Met à jour le temps du dernier parry
-        else
-            spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
-        end
-
-        -- Gestion de l'autospam
-        if autoSpamActive then
+        if distance <= maxDetectionRadius then
             local currentTime = tick()
-            if currentTime - spamStartTime < spamDuration then
+
+            -- Vérifier si le dernier parry a été fait assez loin dans le temps
+            if currentTime - lastParryTime >= parryInterval and not ero then
+                -- Appel à hitremote
                 local args = {
                     0.5, -- Délai ou paramètre
-                    CFrame.new(playerPos), -- Utiliser la position du joueur
+                    CFrame.new(playerPos, targetPos), -- Utiliser le CFrame orienté vers la cible
                     {}, -- Remplir avec les joueurs cibles ou autres
                     {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
                     false
                 }
-                hitremote:FireServer(unpack(args)) -- Appeler hitremote 
-                wait()
-            else
-                autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
-                ero = false 
+                hitremote:FireServer(unpack(args)) -- Appeler hitremote
+                lastParryTime = currentTime -- Met à jour le temps du dernier parry
+                ero = true -- Marquer que le parry a été effectué
+            end
+        else
+            if ero then
+                ero = false -- Réinitialiser ero si la distance dépasse le seuil
             end
         end
     end)
@@ -133,5 +101,4 @@ Player.CharacterAdded:Connect(function()
 end)
 
 -- Initialiser le parry au démarrage
-resolveParryRemote()
 initializeParry()
