@@ -45,7 +45,7 @@ Tab:AddButton({
 	Name = "Auto Spam",
 	Callback = function()
 
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/PreniumAutoParry.lua"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/autospam.lua"))()
   	end    
 })
 
