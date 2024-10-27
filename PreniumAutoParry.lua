@@ -103,7 +103,7 @@ local function initializeParry()
                     -- Appel à hitremote
                     local args = {
                         0.5, -- Délai ou paramètre
-                        CFrame.new(kill), -- Utiliser la position du joueur
+                        CFrame.new(PlayerPos), -- Utiliser la position du joueur
                         {}, -- Remplir avec les joueurs cibles ou autres
                         {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
                         false
@@ -134,7 +134,7 @@ local function initializeParry()
                 -- Effectuer un parry automatique avec hitremote
                 local args = {
                     0.5, -- Délai ou paramètre
-                    CFrame.new(kill), -- Utiliser la position du joueur
+                    CFrame.new(playerPos), -- Utiliser la position du joueur
                     {}, -- Remplir avec les joueurs cibles ou autres
                     {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
                     false
