@@ -28,7 +28,7 @@ OrionLib:MakeNotification({
 
 OrionLib:MakeNotification({
 	Name = "Créatrice",
-	Content = "Made by Asuna_0nO",
+	Content = "Créatrice Asuna_0nO",
 	Image = "rbxassetid://4483345998",
 	Time = 5
 })
@@ -37,7 +37,7 @@ Tab:AddButton({
 	Name = "Auto Parry",
 	Callback = function()
 
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/AutoParry.lua"))()
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/PreniumAutoParry.lua"))()
   	end    
 })
 
