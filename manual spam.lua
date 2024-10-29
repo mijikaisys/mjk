@@ -35,14 +35,18 @@ b.MouseButton1Click:Connect(function()
     b.Text = t and "BRRRR" or "UnU"
     while t do
         local args = {
-                    0.5, -- Délai ou paramètre
-                    CFrame.new(playerPos), -- Utiliser la position du joueur
-                    {}, -- Remplir avec les joueurs cibles ou autres
-                    {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
-                    false
-                }
-                hitremote:FireServer(unpack(args)) -- Appeler hitremote
-                wait()
+                [1] = 0.5,
+                [2] = cframes[math.random(1, #cframes)],
+                [3] = getcloseplr() and {[tostring(getcloseplr().Name)] = getcloseplr().Character.PrimaryPart.Position} or getplrs(),
+                [4] = {
+                    [1] = math.random(200, 500),
+                    [2] = math.random(100, 200)
+                },
+                [5] = false
+            }
+            hitremote:FireServer(unpack(args))
+        end
+    end
     end
 end)
 
