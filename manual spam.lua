@@ -20,13 +20,20 @@ b.Font = Enum.Font.LuckiestGuy
 b.TextXAlignment = Enum.TextXAlignment.Center
 b.TextYAlignment = Enum.TextYAlignment.Center
 b.Parent = s
+local hitremote
+for _, w in next, game:GetDescendants() do
+    if w and w.Name:find("\n") and w:IsA("RemoteEvent") then
+        hitremote = w
+        break
+    end
+end
 
 local t = false
 b.MouseButton1Click:Connect(function()
     t = not t
     b.Text = t and "BRRRR" or "UnU"
     while t do
-        v:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+        w:SendMouseButtonEvent(0, 0, 0, true, game, 0)
         wait()
     end
 end)
