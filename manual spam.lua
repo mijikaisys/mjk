@@ -30,7 +30,7 @@ for _, w in next, game:GetDescendants() do
 end
 
 local t = false
-b.MouseButton1Click:Connect(function()
+w.MouseButton1Click:Connect(function()
     t = not t
     b.Text = t and "BRRRR" or "UnU"
     while t do
@@ -45,8 +45,6 @@ b.MouseButton1Click:Connect(function()
                 [5] = false
             }
             hitremote:FireServer(unpack(args))
-        end
-    end
     end
 end)
 
