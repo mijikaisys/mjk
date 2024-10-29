@@ -33,7 +33,7 @@ b.MouseButton1Click:Connect(function()
     t = not t
     b.Text = t and "BRRRR" or "UnU"
     while t do
-        w:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+        hitremote:FireServer(unpack(args))
         wait()
     end
 end)
