@@ -25,7 +25,7 @@ b.AnchorPoint = Vector2.new(0.5, 0.5)
 b.BackgroundColor3 = Color3.new(0, 0, 0)
 b.BorderSizePixel = 2
 b.BorderColor3 = Color3.new(1, 1, 1)
-b.Text = "MANUAL SPAM"
+b.Text = "MODE BAKA!"
 b.TextColor3 = Color3.new(1, 1, 1)
 b.TextScaled = true
 b.Font = Enum.Font.LuckiestGuy
@@ -36,7 +36,7 @@ b.Parent = s
 local t = false
 b.MouseButton1Click:Connect(function()
     t = not t
-    b.Text = t and "ON" or "OFF"
+    b.Text = t and "BAKAAAAA" or "UnU"
     
     local playerPos = Player.Character.PrimaryPart.Position
     while t do
