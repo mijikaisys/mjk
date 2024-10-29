@@ -20,6 +20,7 @@ b.Font = Enum.Font.LuckiestGuy
 b.TextXAlignment = Enum.TextXAlignment.Center
 b.TextYAlignment = Enum.TextYAlignment.Center
 b.Parent = s
+
 local hitremote
 for _, w in next, game:GetDescendants() do
     if w and w.Name:find("\n") and w:IsA("RemoteEvent") then
