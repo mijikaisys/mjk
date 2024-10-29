@@ -1,7 +1,7 @@
 local a = game:GetService("VirtualInputManager")
 local b = game:GetService("RunService")
 local c = game:GetService("Players").LocalPlayer
-local d = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZYT/DenDenZ-s-Open-Source-Collection/main/Component"))() 
+local d = loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/AutoParryHelper.lua"))() 
 
 local e = false
 
