@@ -100,13 +100,13 @@ local function initializeParry()
                     -- Remplacer l'appel par hitremote
                     -- Exemple d'utilisation dans le contexte de votre autoparry
                     local args = {
-                        0.5, -- Délai ou paramètre
-                        CFrame.new(playerPos) * CFrame.Angles(0, math.rad(90), 0), -- Nouveau CFrame avec rotation
-                        {}, -- Remplir avec les joueurs cibles ou autres
-                        {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
-                        false
-                    }
-                    hitremote:FireServer(unpack(args)) -- Appeler hitremote -- Appeler hitremote
+    0.5, -- Délai ou paramètre
+    CFrame.new(playerPos) * CFrame.Angles(randomAngleX, randomAngleY, randomAngleZ), -- Nouveau CFrame avec rotation aléatoire
+    {}, -- Remplir avec les joueurs cibles ou autres
+    {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
+    false
+}
+hitremote:FireServer(unpack(args)) -- Appeler hitremote -- Appeler hitremote -- Appeler hitremote
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
                     lastParryTime = currentTime
