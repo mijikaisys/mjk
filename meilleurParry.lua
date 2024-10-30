@@ -7,7 +7,7 @@ ScreenGui.Parent = Player:WaitForChild("PlayerGui")
 
 -- Configuration du bouton
 Button.Size = UDim2.new(0, 100, 0, 50) -- Taille du bouton
-Button.Position = UDim2.new(0.5, -150, 0.5, -25) -- Position du bouton au centre
+Button.Position = UDim2.new(0.5, 250, 0.5, -25) -- Position du bouton au centre
 Button.Text = "Fire Hit Remote"
 Button.BackgroundColor3 = Color3.fromRGB(0, 170, 0) -- Couleur de fond
 Button.TextColor3 = Color3.new(1, 1, 1) -- Couleur du texte
