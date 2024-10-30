@@ -83,7 +83,7 @@ local function initializeParry()
             local n = hat.Magnitude
 
             -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.48 * (1 + 0.1 * velocity)
+            local thresholdP = 0.50 * (1 + 0.15 * velocity)
 
             if m > 0 then
                 local o = l - 5
