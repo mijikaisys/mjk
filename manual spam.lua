@@ -49,7 +49,7 @@ b.MouseButton1Click:Connect(function()
             false
         }
         hitremote:FireServer(unpack(args)) -- Utilisation de hitremote
-        wait(0.1) -- Ajuste ce délai pour contrôler la fréquence des appels
+        wait() -- Ajuste ce délai pour contrôler la fréquence des appels
     end
 end)
 
