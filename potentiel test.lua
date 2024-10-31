@@ -34,7 +34,7 @@ button.MouseButton1Click:Connect(function()
         
         parry_remote:FireServer(
             0.5,
-            CFrame.new(camera.CFrame.Position, Vector3.new(math.random(0, 100), math.random(0, 1000), math.random(100, 1000))),
+            CFrame.new(playerPos),
             {[closest_Entity.Name] = target_Position},
             {target_Position.X, target_Position.Y},
             false
