@@ -5,7 +5,7 @@ local localPlayer = Players.LocalPlayer
 local baseSphereRadius = 5 -- Rayon de base de la sphère de détection
 local detectionSphere
 local alertSound = Instance.new("Sound") -- Créer un son
-alertSound.SoundId = "rbxassetid://184432017" -- Remplacez par l'ID de votre son
+alertSound.SoundId = "rbxassetid://507771019" -- Son d'alerte simple
 alertSound.Parent = Workspace
 
 -- Fonction pour créer la sphère de détection
@@ -65,6 +65,9 @@ while true do
         if isPlayerTarget(ball) then
             local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
             local dynamicRadius = baseSphereRadius + (ballVelocity.magnitude - distanceToBall) -- Calculer le rayon dynamique
+
+            -- Mettre à jour la taille de la sphère
+            detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
 
             if isBallInSphere(ballPosition, detectionSphere.Position, dynamicRadius) then
                 print("La balle est dans la sphère de détection et vise le joueur !")
