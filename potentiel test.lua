@@ -55,7 +55,7 @@ local soundPlayed = false
 local wasBallInSphere = false -- Suivre si la balle était dans la sphère
 
 -- Facteur d'atténuation pour le rayon dynamique
-local attenuationFactor = 0.75 -- Augmenté pour un meilleur ajustement
+local attenuationFactor = 0.72 -- Augmenté pour un meilleur ajustement
 
 -- Fonction principale
 while true do
