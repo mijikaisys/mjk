@@ -71,7 +71,7 @@ while true do
 
             if isBallInSphere(ballPosition, detectionSphere.Position, dynamicRadius) then
                 print("La balle est dans la sphère de détection et vise le joueur !")
-                
+                alertSound:Play() 
                 -- Jouer le son si ce n'est pas déjà joué
                 if not alertSound.IsPlaying then
                     alertSound:Play()
