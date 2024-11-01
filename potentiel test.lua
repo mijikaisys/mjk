@@ -2,7 +2,39 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local camera = workspace.CurrentCamera -- Assurez-vous que cela pointe vers la caméra actuelle
+local closest_Entity = nil
 
+function get_closest_entity(Object: Part)
+
+    task.spawn(function()
+
+        local closest
+
+        local max_distance = math.huge
+
+        for index, entity in workspace.Alive:GetChildren() do
+
+            if entity.Name ~= Players.LocalPlayer.Name then
+
+                local distance = (Object.Position - entity.HumanoidRootPart.Position).Magnitude
+
+                if distance < max_distance then
+
+                    closest_Entity = entity
+
+                    max_distance = distance
+
+                end
+
+            end
+
+        end
+
+        return closest_Entity
+
+    end)
+
+endlocal target_Position = closest_Entity.HumanoidRootPart.Position
 -- Fonction pour résoudre le parry_remote
 function resolve_parry_Remote()
     for _, value in pairs(ReplicatedStorage:GetChildren()) do
