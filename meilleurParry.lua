@@ -43,6 +43,7 @@ local function fireHitRemote()
             [5] = false
         }
         hitremote:FireServer(unpack(args))
+        fireHitRemote()
     end
 end
 
