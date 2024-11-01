@@ -1,26 +1,30 @@
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
-local UserInputService = game:GetService("UserInputService")
 local localPlayer = Players.LocalPlayer
 
 local baseSphereRadius = 20 -- Rayon de base de la sphère de détection
-local detectionSphere = createDetectionSphere()
+local detectionSphere
 local alertSound = Instance.new("Sound") -- Créer un son
-alertSound.SoundId = "rbxassetid://7128958209" -- Remplacez par l'ID de votre son
+alertSound.SoundId = "rbxassetid://184432017" -- Remplacez par l'ID de votre son
 alertSound.Parent = Workspace
 
 -- Fonction pour créer la sphère de détection
 local function createDetectionSphere()
-    local sphere = Instance.new("Part")
-    sphere.Size = Vector3.new(baseSphereRadius * 2, baseSphereRadius * 2, baseSphereRadius * 2) -- Taille de la sphère
-    sphere.Shape = Enum.PartType.Ball
-    sphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Position initiale à la position du joueur
-    sphere.Anchored = true
-    sphere.Transparency = 0.5
-    sphere.Color = Color3.new(1, 0, 0) -- Couleur rouge
-    sphere.Parent = Workspace
+    if detectionSphere then
+        detectionSphere:Destroy() -- Supprimez la sphère précédente si elle existe
+    end
 
-    return sphere
+    detectionSphere = Instance.new("Part")
+    detectionSphere.Size = Vector3.new(baseSphereRadius * 2, baseSphereRadius * 2, baseSphereRadius * 2) -- Taille de la sphère
+    detectionSphere.Shape = Enum.PartType.Ball
+    detectionSphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Position initiale à la position du joueur
+    detectionSphere.Anchored = true
+    detectionSphere.Transparency = 0.5
+    detectionSphere.Color = Color3.new(1, 0, 0) -- Couleur rouge
+    detectionSphere.CanCollide = false -- Désactiver la collision
+    detectionSphere.Parent = Workspace
+
+    print("Sphère de détection créée") -- Message de débogage
 end
 
 -- Fonction pour trouver la balle ciblée
@@ -42,6 +46,9 @@ local function isBallInSphere(ballPosition, spherePosition, sphereRadius)
     local distance = (ballPosition - spherePosition).magnitude
     return distance <= sphereRadius
 end
+
+-- Créer la sphère de détection au début
+createDetectionSphere()
 
 -- Fonction principale
 while true do
@@ -65,13 +72,17 @@ while true do
                 -- Jouer le son si ce n'est pas déjà joué
                 if not alertSound.IsPlaying then
                     alertSound:Play()
+                    print("Son joué") -- Message de débogage
                 end
             else
                 -- Arrêter le son si la balle sort de la portée
                 if alertSound.IsPlaying then
                     alertSound:Stop()
+                    print("Son arrêté") -- Message de débogage
                 end
             end
         end
+    else
+        print("Aucune balle ciblée trouvée") -- Message de débogage
     end
 end
