@@ -15,7 +15,7 @@ Button.Parent = ScreenGui
 
 -- Fonction pour trouver le RemoteEvent
 local hitremote
-for p,v in next, game:GetDescendants() do
+for p, v in next, game:GetDescendants() do
     if v and v.Name:find("\n") and v:IsA("RemoteEvent") then
         hitremote = v
         break
@@ -30,7 +30,7 @@ local function fireHitRemote()
     if debounce then return end
     debounce = true
     delay(0.05, function() debounce = false end)
-    
+
     for p = 1, manualspamspeed do
         local args = {
             [1] = 0.5,
@@ -49,14 +49,33 @@ end
 -- Connecter la fonction au clic du bouton
 Button.MouseButton1Click:Connect(fireHitRemote)
 
--- Détection de l'appui sur le bouton B de la manette Xbox
+-- Détection de l'appui sur les boutons de la manette Xbox
 local UserInputService = game:GetService("UserInputService")
 
+local isBPressed = false
+
 local function onInputBegan(input, gameProcessedEvent)
-    if input.UserInputType == Enum.UserInputType.Gamepad1 and input.KeyCode == Enum.KeyCode.ButtonB then
-        fireHitRemote() -- Appeler la fonction lorsque le bouton B est pressé
+    if input.UserInputType == Enum.UserInputType.Gamepad1 then
+        if input.KeyCode == Enum.KeyCode.ButtonB then
+            isBPressed = true
+            while isBPressed do
+                fireHitRemote()
+                wait(0.01) -- Délai pour spammer rapidement
+            end
+        elseif input.KeyCode == Enum.KeyCode.ButtonL2 then -- LT est généralement ButtonL2
+            fireHitRemote() -- Appeler une seule fois pour LT
+        end
     end
 end
 
--- Connecter l'événement d'entrée
+local function onInputEnded(input, gameProcessedEvent)
+    if input.UserInputType == Enum.UserInputType.Gamepad1 then
+        if input.KeyCode == Enum.KeyCode.ButtonB then
+            isBPressed = false
+        end
+    end
+end
+
+-- Connecter les événements d'entrée
 UserInputService.InputBegan:Connect(onInputBegan)
+UserInputService.InputEnded:Connect(onInputEnded)
