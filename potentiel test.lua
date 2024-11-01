@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local camera = workspace.CurrentCamera -- Assurez-vous que cela pointe vers la caméra actuelle
 local closest_Entity = nil
+local target_Position = closest_Entity.HumanoidRootPart.Position
 
 function get_closest_entity(Object: Part)
 
