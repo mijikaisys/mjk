@@ -19,7 +19,7 @@ local Button
 local function fireHitRemote()
     if debounce then return end
     debounce = true
-    delay(0.05, function() debounce = false end)
+    delay(0.01, function() debounce = false end)
 
     for p = 1, manualspamspeed do
         local args = {
@@ -33,6 +33,7 @@ local function fireHitRemote()
             [5] = false
         }
         hitremote:FireServer(unpack(args))
+        fireHitRemote()
     end
 end
 
@@ -69,7 +70,7 @@ local function onInputBegan(input, gameProcessedEvent)
             isBPressed = true
             while isBPressed do
                 fireHitRemote()
-                wait(0.05) -- Délai pour spammer rapidement
+                wait(0.01) -- Délai pour spammer rapidement
             end
         elseif input.KeyCode == Enum.KeyCode.ButtonL2 then -- LT est généralement ButtonL2
             fireHitRemote() -- Appeler une seule fois pour LT
