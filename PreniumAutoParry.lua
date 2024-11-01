@@ -1,156 +1,101 @@
-getgenv().autoparry = true
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+local localPlayer = Players.LocalPlayer
 
-local VirtualManager = game:GetService("VirtualInputManager")
-local Players = game:GetService('Players')
-local Player = Players.LocalPlayer or Players.PlayerAdded:Wait()
-local RunService = game:GetService('RunService')
-local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/TripleScript/TripleHub/main/helper_.lua"))()
+local baseSphereRadius = 5 -- Rayon de base de la sphère de détection
+local detectionSphere
+local alertSound = Instance.new("Sound") -- Créer un son
+alertSound.SoundId = "rbxassetid://5433158470" -- Nouveau son d'alerte
+alertSound.Parent = Workspace
 
--- Détection du RemoteEvent
-local hitremote
-for _, v in next, game:GetDescendants() do
-    if v and v.Name:find("\n") and v:IsA("RemoteEvent") then
-        hitremote = v
-        break
+-- Fonction pour créer la sphère de détection
+local function createDetectionSphere()
+    if detectionSphere then
+        detectionSphere:Destroy() -- Supprimez la sphère précédente si elle existe
+    end
+
+    detectionSphere = Instance.new("Part")
+    detectionSphere.Size = Vector3.new(baseSphereRadius * 2, baseSphereRadius * 2, baseSphereRadius * 2) -- Taille de la sphère
+    detectionSphere.Shape = Enum.PartType.Ball
+    detectionSphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Position initiale à la position du joueur
+    detectionSphere.Anchored = true
+    detectionSphere.Transparency = 0.5
+    detectionSphere.Color = Color3.new(1, 0, 0) -- Couleur rouge
+    detectionSphere.CanCollide = false -- Désactiver la collision
+    detectionSphere.Parent = Workspace
+
+    print("Sphère de détection créée") -- Message de débogage
+end
+
+-- Fonction pour trouver la balle ciblée
+local function findTargetBall()
+    for _, ball in pairs(Workspace:WaitForChild("Balls"):GetChildren()) do
+        if ball:IsA("BasePart") and ball:GetAttribute("realBall") then
+            return ball
+        end
     end
 end
 
-local function initializeParry()
-    local ero = false
-    local baseDetectionRadius = 20
-    local lastParryTime = 0
-    local parryInterval = 0.252 -- Intervalle en secondes entre chaque parry
-    local autoSpamActive = false
-    local spamStartTime = 0
-    local spamDuration = 0.08 -- Durée pendant laquelle l'autospam est actif
-
-    local parrySound = Instance.new("Sound", Player.Character)
-    parrySound.SoundId = "rbxassetid://5433158470"
-
-    local spherePart = Instance.new("Part")
-    spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
-    spherePart.Shape = Enum.PartType.Ball
-    spherePart.Anchored = true
-    spherePart.CanCollide = false
-    spherePart.Material = Enum.Material.ForceField
-    spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-    spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
-    spherePart.Parent = workspace
-
-    local proximityIndicator = Instance.new("Part")
-    proximityIndicator.Size = Vector3.new(5, 5, 5)
-    proximityIndicator.Shape = Enum.PartType.Ball
-    proximityIndicator.Anchored = true
-    proximityIndicator.CanCollide = false 
-    proximityIndicator.Color = Color3.new(0, 0, 0)
-    proximityIndicator.Parent = workspace
-
-    RunService.RenderStepped:Connect(function()
-        if not getgenv().autoparry then 
-            return 
-        end
-
-        local par = parry_helper.FindTargetBall()
-        if not par then 
-            return 
-        end
-
-        spherePart.Position = Player.Character.PrimaryPart.Position
-
-        local playerPos = Player.Character.PrimaryPart.Position
-        local targetPos = par.Position
-
-        local distance = (targetPos - playerPos).Magnitude
-        local velocity = par.AssemblyLinearVelocity.Magnitude
-
-        local maxDetectionRadius = velocity / 0.15
-        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
-
-        if distance <= adjustedBaseDetectionRadius then
-            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 1115.5, newSize * 1115.5, newSize * 1115.5) -- Augmenter le facteur d'échelle ici
-
-            local hat = par.AssemblyLinearVelocity
-            if par:FindFirstChild('zoomies') then 
-                hat = par.zoomies.VectorVelocity
-            end
-
-            local i = par.Position
-            local j = Player.Character.PrimaryPart.Position
-            local kil = (j - i).Unit
-            local l = Player:DistanceFromCharacter(i)
-            local m = kil:Dot(hat.Unit)
-            local n = hat.Magnitude
-
-            -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.50 * (1 + 0.15 * velocity)
-
-            if m > 0 then
-                local o = l - 5
-                local p = o / n
-
-                if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
-                    local currentTime = tick()
-                    if currentTime - lastParryTime < parryInterval then
-                        -- Activer l'autospam si la fréquence est rapide
-                        autoSpamActive = true
-                        spamStartTime = currentTime
-                    end
-
-                    -- Remplacer l'appel par hitremote
-                    local args = {
-                        0.5, -- Délai ou paramètre
-                        CFrame.new(playerPos), -- Utiliser la position du joueur
-                        {}, -- Remplir avec les joueurs cibles ou autres
-                        {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
-                        false
-                    }
-                    hitremote:FireServer(unpack(args)) -- Appeler hitremote
-                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
-                    ero = true
-                    lastParryTime = currentTime
-                else
-                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
-                end
-            else
-                if ero then
-                    parrySound:Play()
-                    ero = false -- Réinitialiser ero pour permettre un nouveau parry
-                end
-            end
-
-            proximityIndicator.Position = Player.Character.PrimaryPart.Position
-        else
-            proximityIndicator.Position = Vector3.new(0, -1000, 0)
-        end
-
-        -- Gestion de l'autospam
-        if autoSpamActive then
-            local currentTime = tick()
-            if currentTime - spamStartTime < spamDuration then
-                -- Effectuer un parry automatique avec hitremote
-                local args = {
-                    0.5, -- Délai ou paramètre
-                    CFrame.new(playerPos), -- Utiliser la position du joueur
-                    {}, -- Remplir avec les joueurs cibles ou autres
-                    {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
-                    false
-                }
-                hitremote:FireServer(unpack(args)) -- Appeler hitremote
-                wait()
-            else
-                autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
-                ero = false 
-            end
-        end
-    end)
+-- Fonction pour vérifier si la balle vise le joueur
+local function isPlayerTarget(ball)
+    return ball:GetAttribute("target") == localPlayer.Name
 end
 
--- Écouter les événements de changement de personnage
-Player.CharacterAdded:Connect(function()
-    wait()  -- Attendre un moment pour s'assurer que le personnage est complètement chargé
-    initializeParry()  -- Réinitialiser le parry à chaque respawn
-end)
+-- Fonction pour vérifier si la balle est dans la sphère
+local function isBallInSphere(ballPosition, spherePosition, sphereRadius)
+    local distance = (ballPosition - spherePosition).magnitude
+    return distance <= sphereRadius
+end
 
--- Initialiser le parry à la première exécution
-initializeParry()
+-- Créer la sphère de détection au début
+createDetectionSphere()
+
+-- Variable pour suivre l'état du son
+local soundPlayed = false
+local wasBallInSphere = false -- Suivre si la balle était dans la sphère
+
+-- Facteur d'atténuation pour le rayon dynamique
+local attenuationFactor = 0.7 -- Augmenté pour un meilleur ajustement
+
+-- Fonction principale
+while true do
+    wait(0.05) -- Délai réduit pour une meilleure réactivité
+
+    local ball = findTargetBall() -- Trouver la balle ciblée
+
+    if ball then
+        local ballPosition = ball.Position
+        local ballVelocity = ball.Velocity
+
+        detectionSphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Mettre à jour la position de la sphère
+
+        if isPlayerTarget(ball) then
+            local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
+            local percentageSpeed = ballVelocity.magnitude * attenuationFactor -- Utiliser le facteur d'atténuation
+            local dynamicRadius = baseSphereRadius + percentageSpeed -- Calculer le rayon dynamique
+
+            -- Mettre à jour la taille de la sphère
+            detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
+
+            local ballInSphere = isBallInSphere(ballPosition, detectionSphere.Position, dynamicRadius)
+
+            if ballInSphere then
+                if not wasBallInSphere then
+                    print("La balle est entrée dans la sphère de détection et vise le joueur !")
+                    alertSound:Play() -- Jouer le son à l'entrée
+                    soundPlayed = true -- Marquer que le son a été joué
+                end
+            else
+                -- Vérifier si la balle était dans la sphère
+                if wasBallInSphere then
+                    print("La balle est sortie de la sphère de détection.")
+                end
+            end
+
+            -- Mettre à jour l'état de la balle
+            wasBallInSphere = ballInSphere
+        end
+    else
+        print("Aucune balle ciblée trouvée") -- Message de débogage
+    end
+end
