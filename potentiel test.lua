@@ -19,7 +19,7 @@ local function createDetectionSphere()
     detectionSphere.Shape = Enum.PartType.Ball
     detectionSphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Position initiale à la position du joueur
     detectionSphere.Anchored = true
-    detectionSphere.Transparency = 0.5
+    detectionSphere.Transparency = 0.9
     detectionSphere.Color = Color3.new(1, 0, 0) -- Couleur rouge
     detectionSphere.CanCollide = false -- Désactiver la collision
     detectionSphere.Parent = Workspace
@@ -55,47 +55,58 @@ local soundPlayed = false
 local wasBallInSphere = false -- Suivre si la balle était dans la sphère
 
 -- Facteur d'atténuation pour le rayon dynamique
-local attenuationFactor = 0.7 -- Augmenté pour un meilleur ajustement
+local attenuationFactor = 0.75 -- Augmenté pour un meilleur ajustement
 
 -- Fonction principale
 while true do
     wait(0.05) -- Délai réduit pour une meilleure réactivité
 
-    local ball = findTargetBall() -- Trouver la balle ciblée
+    -- Vérifier si le personnage est vivant
+    if localPlayer.Character and localPlayer.Character:FindFirstChild("Humanoid") and localPlayer.Character.Humanoid.Health > 0 then
+        local ball = findTargetBall() -- Trouver la balle ciblée
 
-    if ball then
-        local ballPosition = ball.Position
-        local ballVelocity = ball.Velocity
+        if ball then
+            local ballPosition = ball.Position
+            local ballVelocity = ball.Velocity
 
-        detectionSphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Mettre à jour la position de la sphère
+            -- Ne mettez pas à jour la position de la sphère si le personnage est vivant
+            detectionSphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Mettre à jour la position de la sphère
 
-        if isPlayerTarget(ball) then
-            local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
-            local percentageSpeed = ballVelocity.magnitude * attenuationFactor -- Utiliser le facteur d'atténuation
-            local dynamicRadius = baseSphereRadius + percentageSpeed -- Calculer le rayon dynamique
+            if isPlayerTarget(ball) then
+                local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
+                local percentageSpeed = ballVelocity.magnitude * attenuationFactor -- Utiliser le facteur d'atténuation
+                local dynamicRadius = baseSphereRadius + percentageSpeed -- Calculer le rayon dynamique
 
-            -- Mettre à jour la taille de la sphère
-            detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
+                -- Mettre à jour la taille de la sphère
+                detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
 
-            local ballInSphere = isBallInSphere(ballPosition, detectionSphere.Position, dynamicRadius)
+                local ballInSphere = isBallInSphere(ballPosition, detectionSphere.Position, dynamicRadius)
 
-            if ballInSphere then
-                if not wasBallInSphere then
-                    print("La balle est entrée dans la sphère de détection et vise le joueur !")
-                    alertSound:Play() -- Jouer le son à l'entrée
-                    soundPlayed = true -- Marquer que le son a été joué
+                if ballInSphere then
+                    if not wasBallInSphere then
+                        print("La balle est entrée dans la sphère de détection et vise le joueur !")
+                        alertSound:Play() -- Jouer le son à l'entrée
+                        soundPlayed = true -- Marquer que le son a été joué
+                    end
+                else
+                    -- Vérifier si la balle était dans la sphère
+                    if wasBallInSphere then
+                        print("La balle est sortie de la sphère de détection.")
+                    end
                 end
+
+                -- Mettre à jour l'état de la balle
+                wasBallInSphere = ballInSphere
             else
-                -- Vérifier si la balle était dans la sphère
-                if wasBallInSphere then
-                    print("La balle est sortie de la sphère de détection.")
-                end
+                -- Réinitialiser la taille de la sphère si la balle ne vise plus le joueur
+                detectionSphere.Size = Vector3.new(baseSphereRadius * 2, baseSphereRadius * 2, baseSphereRadius * 2)
+                wasBallInSphere = false -- Réinitialiser l'état de la balle
             end
-
-            -- Mettre à jour l'état de la balle
-            wasBallInSphere = ballInSphere
+        else
+            print("Aucune balle ciblée trouvée") -- Message de débogage
         end
     else
-        print("Aucune balle ciblée trouvée") -- Message de débogage
+        -- Si le personnage est mort, ne pas mettre à jour la sphère
+        print("Le personnage est mort. La sphère ne sera pas mise à jour.")
     end
 end
