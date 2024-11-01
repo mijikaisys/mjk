@@ -23,7 +23,7 @@ for p, v in next, game:GetDescendants() do
 end
 
 local debounce = false
-local manualspamspeed = 5 -- Nombre de fois que le RemoteEvent sera appelé
+local manualspamspeed = 10 -- Nombre de fois que le RemoteEvent sera appelé
 
 -- Fonction pour déclencher le RemoteEvent
 local function fireHitRemote()
