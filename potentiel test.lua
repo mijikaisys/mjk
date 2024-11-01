@@ -2,10 +2,10 @@ local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local localPlayer = Players.LocalPlayer
 
-local baseSphereRadius = 25 -- Rayon de base de la sphère de détection
+local baseSphereRadius = 5 -- Rayon de base de la sphère de détection
 local detectionSphere
 local alertSound = Instance.new("Sound") -- Créer un son
-alertSound.SoundId = "rbxassetid://507771019" -- Son d'alerte simple
+alertSound.SoundId = "rbxassetid://5433158470" -- Nouveau son d'alerte
 alertSound.Parent = Workspace
 
 -- Fonction pour créer la sphère de détection
@@ -50,9 +50,16 @@ end
 -- Créer la sphère de détection au début
 createDetectionSphere()
 
+-- Variable pour suivre l'état du son
+local soundPlayed = false
+local wasBallInSphere = false -- Suivre si la balle était dans la sphère
+
+-- Facteur d'atténuation pour le rayon dynamique
+local attenuationFactor = 0.7 -- Augmenté pour un meilleur ajustement
+
 -- Fonction principale
 while true do
-    wait(0.05) -- Délai pour éviter une boucle trop rapide
+    wait(0.05) -- Délai réduit pour une meilleure réactivité
 
     local ball = findTargetBall() -- Trouver la balle ciblée
 
@@ -64,26 +71,29 @@ while true do
 
         if isPlayerTarget(ball) then
             local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
-            local dynamicRadius = baseSphereRadius + ((ballVelocity.magnitude * 0.8) - distanceToBall)) -- Calculer le rayon dynamique
+            local percentageSpeed = ballVelocity.magnitude * attenuationFactor -- Utiliser le facteur d'atténuation
+            local dynamicRadius = baseSphereRadius + percentageSpeed -- Calculer le rayon dynamique
 
             -- Mettre à jour la taille de la sphère
             detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
 
-            if isBallInSphere(ballPosition, detectionSphere.Position, dynamicRadius) then
-                print("La balle est dans la sphère de détection et vise le joueur !")
-                alertSound:Play() 
-                -- Jouer le son si ce n'est pas déjà joué
-                if not alertSound.IsPlaying then
-                    alertSound:Play()
-                    print("Son joué") -- Message de débogage
+            local ballInSphere = isBallInSphere(ballPosition, detectionSphere.Position, dynamicRadius)
+
+            if ballInSphere then
+                if not wasBallInSphere then
+                    print("La balle est entrée dans la sphère de détection et vise le joueur !")
+                    alertSound:Play() -- Jouer le son à l'entrée
+                    soundPlayed = true -- Marquer que le son a été joué
                 end
             else
-                -- Arrêter le son si la balle sort de la portée
-                if alertSound.IsPlaying then
-                    alertSound:Stop()
-                    print("Son arrêté") -- Message de débogage
+                -- Vérifier si la balle était dans la sphère
+                if wasBallInSphere then
+                    print("La balle est sortie de la sphère de détection.")
                 end
             end
+
+            -- Mettre à jour l'état de la balle
+            wasBallInSphere = ballInSphere
         end
     else
         print("Aucune balle ciblée trouvée") -- Message de débogage
