@@ -6,7 +6,7 @@ local localPlayer = Players.LocalPlayer
 local baseSphereRadius = 20 -- Rayon de base de la sphère de détection
 local detectionSphere = createDetectionSphere()
 local alertSound = Instance.new("Sound") -- Créer un son
-alertSound.SoundId = "rbxassetid://VotreSoundIdIci" -- Remplacez par l'ID de votre son
+alertSound.SoundId = "rbxassetid://7128958209" -- Remplacez par l'ID de votre son
 alertSound.Parent = Workspace
 
 -- Fonction pour créer la sphère de détection
