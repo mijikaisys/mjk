@@ -64,7 +64,7 @@ while true do
 
         if isPlayerTarget(ball) then
             local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
-            local dynamicRadius = baseSphereRadius + (ballVelocity.magnitude - distanceToBall) -- Calculer le rayon dynamique
+            local dynamicRadius = baseSphereRadius + (ballVelocity.magnitude * 0.2 - distanceToBall) -- Calculer le rayon dynamique
 
             -- Mettre à jour la taille de la sphère
             detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
