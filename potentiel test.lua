@@ -2,7 +2,7 @@ local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local localPlayer = Players.LocalPlayer
 
-local baseSphereRadius = 20 -- Rayon de base de la sphère de détection
+local baseSphereRadius = 5 -- Rayon de base de la sphère de détection
 local detectionSphere
 local alertSound = Instance.new("Sound") -- Créer un son
 alertSound.SoundId = "rbxassetid://184432017" -- Remplacez par l'ID de votre son
