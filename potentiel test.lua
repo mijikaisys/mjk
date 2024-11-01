@@ -52,7 +52,7 @@ createDetectionSphere()
 
 -- Fonction principale
 while true do
-    wait(0.1) -- Délai pour éviter une boucle trop rapide
+    wait(0.05) -- Délai pour éviter une boucle trop rapide
 
     local ball = findTargetBall() -- Trouver la balle ciblée
 
