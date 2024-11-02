@@ -2,6 +2,47 @@ local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local localPlayer = Players.LocalPlayer
 
+local a = game:GetService("VirtualInputManager")
+local b = game:GetService("RunService")
+local c = game:GetService("Players").LocalPlayer
+local d = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZYT/DenDenZ-s-Open-Source-Collection/main/Component"))() 
+
+local e = false
+
+spawn(function()
+    b.PreRender:Connect(function()
+        if not getgenv().f then return end
+
+        local g = d.FindTargetBall()
+        if not g then return end
+
+        local h = g.AssemblyLinearVelocity
+        if g:FindFirstChild('zoomies') then 
+            h = g.zoomies.VectorVelocity
+        end
+
+        local i = g.Position
+        local j = c.Character.PrimaryPart.Position
+        local k = (j - i).Unit
+        local l = c:DistanceFromCharacter(i)
+        local m = k:Dot(h.Unit)
+        local n = h.Magnitude
+
+        if m > 0 then
+            local o = l - 5
+            local p = o / n
+
+            if d.IsPlayerTarget(g) and p <= 0.55 and not e then
+                alertSound:Play()
+                wait(0.01)
+                e = true
+            end
+        else
+            e = false
+        end
+    end)
+end)
+
 local baseSphereRadius = 5 -- Rayon de base de la sphère de détection
 local detectionSphere
 local alertSound = Instance.new("Sound") -- Créer un son
@@ -83,8 +124,8 @@ while true do
                 if ballInSphere then
                     if not wasBallInSphere then
                         print("La balle est entrée dans la sphère de détection et vise le joueur !")
-                        alertSound:Play() -- Jouer le son à l'entrée
-                        soundPlayed = true -- Marquer que le son a été joué
+                         -- Jouer le son à l'entrée
+                         -- Marquer que le son a été joué
                     end
                 else
                     -- Vérifier si la balle était dans la sphère
