@@ -54,9 +54,6 @@ createDetectionSphere()
 local soundPlayed = false
 local wasBallInSphere = false -- Suivre si la balle était dans la sphère
 
--- Facteur d'atténuation pour le rayon dynamique
-local attenuationFactor = 0.72 -- Augmenté pour un meilleur ajustement
-
 -- Fonction principale
 while true do
     wait(0.05) -- Délai réduit pour une meilleure réactivité
@@ -67,15 +64,16 @@ while true do
 
         if ball then
             local ballPosition = ball.Position
-            local ballVelocity = ball.Velocity
+            local ballVelocity = ball.Velocity.magnitude -- Obtenir la vitesse de la balle
 
-            -- Ne mettez pas à jour la position de la sphère si le personnage est vivant
+            -- Mettre à jour la position de la sphère
             detectionSphere.Position = localPlayer.Character.HumanoidRootPart.Position -- Mettre à jour la position de la sphère
 
             if isPlayerTarget(ball) then
                 local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
-                local percentageSpeed = ballVelocity.magnitude * attenuationFactor -- Utiliser le facteur d'atténuation
-                local dynamicRadius = baseSphereRadius + percentageSpeed -- Calculer le rayon dynamique
+                
+                -- Calculer le rayon dynamique : base + (vitesse / 10)
+                local dynamicRadius = baseSphereRadius + math.floor(ballVelocity / 8.5) -- S'agrandit de 1 toutes les 10 unités de vitesse
 
                 -- Mettre à jour la taille de la sphère
                 detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
