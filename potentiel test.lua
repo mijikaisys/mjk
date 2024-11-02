@@ -7,7 +7,7 @@ local e = false
 
 -- Créer une instance de son
 local alertSound = Instance.new("Sound")
-alertSound.SoundId = "rbxassetid://YOUR_SOUND_ID" -- Remplacez YOUR_SOUND_ID par l'ID du son que vous souhaitez utiliser
+alertSound.SoundId = "rbxassetid://5433158470" -- Remplacez YOUR_SOUND_ID par l'ID du son que vous souhaitez utiliser
 alertSound.Parent = game.Workspace
 
 spawn(function()
