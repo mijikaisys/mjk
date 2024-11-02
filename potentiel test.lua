@@ -5,11 +5,6 @@ local d = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZYT/D
 
 local e = false
 
--- Créer une instance de son
-local alertSound = Instance.new("Sound")
-alertSound.SoundId = "rbxassetid://5433158470" -- Remplacez YOUR_SOUND_ID par l'ID du son que vous souhaitez utiliser
-alertSound.Parent = game.Workspace
-
 spawn(function()
     b.PreRender:Connect(function()
         if not getgenv().f then return end
@@ -33,8 +28,7 @@ spawn(function()
             local o = l - 5
             local p = o / n
 
-            if d.IsPlayerTarget(g) and p <= 0.70 and not e then
-                alertSound:Play() -- Jouer le son ici
+            if d.IsPlayerTarget(g) and p <= 0.55 and not e then
                 a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                 wait(0.01)
                 e = true
@@ -44,4 +38,3 @@ spawn(function()
         end
     end)
 end)
-
