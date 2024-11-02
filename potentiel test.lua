@@ -33,7 +33,7 @@ spawn(function()
             local o = l - 5
             local p = o / n
 
-            if d.IsPlayerTarget(g) and p <= 0.55 and not e then
+            if d.IsPlayerTarget(g) and p <= 0.70 and not e then
                 alertSound:Play() -- Jouer le son ici
                 wait(0.01)
                 e = true
