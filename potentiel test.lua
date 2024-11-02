@@ -75,7 +75,7 @@ while true do
             if isPlayerTarget(ball) then
                 local distanceToBall = (ballPosition - detectionSphere.Position).magnitude
                 local percentageSpeed = ballVelocity.magnitude * attenuationFactor -- Utiliser le facteur d'atténuation
-                local dynamicRadius = baseSphereRadius + (percentageSpeed - distanceToBall) -- Calculer le rayon dynamique
+                local dynamicRadius = baseSphereRadius + ((percentageSpeed - (distanceToBall * 0.2) -- Calculer le rayon dynamique
 
                 -- Mettre à jour la taille de la sphère
                 detectionSphere.Size = Vector3.new(dynamicRadius * 2, dynamicRadius * 2, dynamicRadius * 2)
