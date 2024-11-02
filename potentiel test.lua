@@ -35,6 +35,7 @@ spawn(function()
 
             if d.IsPlayerTarget(g) and p <= 0.70 and not e then
                 alertSound:Play() -- Jouer le son ici
+                a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                 wait(0.01)
                 e = true
             end
