@@ -22,7 +22,7 @@ local function initializeParry()
     local parryInterval = 0.252 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
     local spamStartTime = 0
-    local spamDuration = 0.08 -- Durée pendant laquelle l'autospam est actif
+    local spamDuration = 0.25 -- Durée pendant laquelle l'autospam est actif
 
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
@@ -44,6 +44,28 @@ local function initializeParry()
     proximityIndicator.CanCollide = false 
     proximityIndicator.Color = Color3.new(0, 0, 0)
     proximityIndicator.Parent = workspace
+
+    local camera = workspace.CurrentCamera
+    local mouse = Player:GetMouse()
+
+    local function getClosestEntity()
+        local closest_Entity = nil
+        local shortestDistance = math.huge
+
+        for _, entity in pairs(workspace.Alive:GetChildren()) do
+            if entity:IsA("Model") and entity:FindFirstChild("HumanoidRootPart") then
+                local screenPoint = camera:WorldToViewportPoint(entity.HumanoidRootPart.Position)
+                local distanceToMouse = (Vector2.new(screenPoint.X, screenPoint.Y) - Vector2.new(mouse.X, mouse.Y)).Magnitude
+
+                if distanceToMouse < shortestDistance then
+                    closest_Entity = entity
+                    shortestDistance = distanceToMouse
+                end
+            end
+        end
+
+        return closest_Entity
+    end
 
     RunService.RenderStepped:Connect(function()
         if not getgenv().autoparry then 
@@ -89,7 +111,8 @@ local function initializeParry()
                 local o = l - 5
                 local p = o / n
 
-                if parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
+                local closest_Entity = getClosestEntity()
+                if closest_Entity and parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
                     local currentTime = tick()
                     if currentTime - lastParryTime < parryInterval then
                         -- Activer l'autospam si la fréquence est rapide
@@ -97,15 +120,17 @@ local function initializeParry()
                         spamStartTime = currentTime
                     end
 
-                    -- Remplacer l'appel par hitremote
-                    local args = {
-                        0.5, -- Délai ou paramètre
-                        CFrame.new(playerPos), -- Utiliser la position du joueur
-                        {}, -- Remplir avec les joueurs cibles ou autres
-                        {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
+                    -- Utiliser le RemoteEvent pour le parry
+                    local cf = camera.CFrame
+                    local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
+
+                    hitremote:FireServer(
+                        0,
+                        CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
+                        {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+                        {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
                         false
-                    }
-                    hitremote:FireServer(unpack(args)) -- Appeler hitremote
+                    )
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
                     lastParryTime = currentTime
@@ -128,16 +153,21 @@ local function initializeParry()
         if autoSpamActive then
             local currentTime = tick()
             if currentTime - spamStartTime < spamDuration then
-                -- Effectuer un parry automatique avec hitremote
-                local args = {
-                    0.5, -- Délai ou paramètre
-                    CFrame.new(playerPos), -- Utiliser la position du joueur
-                    {}, -- Remplir avec les joueurs cibles ou autres
-                    {math.random(200, 500), math.random(100, 200)}, -- Valeurs aléatoires
-                    false
-                }
-                hitremote:FireServer(unpack(args)) -- Appeler hitremote
-                wait()
+                -- Effectuer un parry automatique
+                local closest_Entity = getClosestEntity()
+                if closest_Entity then
+                    local cf = camera.CFrame
+                    local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
+
+                    hitremote:FireServer(
+                        0,
+                        CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
+                        {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+                        {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
+                        false
+                    )
+                    wait()
+                end
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
                 ero = false 
