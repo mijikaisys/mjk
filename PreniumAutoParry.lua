@@ -1,4 +1,4 @@
-getgenv().autoparry = true
+etgenv().autoparry = true
 
 local VirtualManager = game:GetService("VirtualInputManager")
 local Players = game:GetService('Players')
@@ -27,15 +27,27 @@ local function initializeParry()
     local parrySound = Instance.new("Sound", Player.Character)
     parrySound.SoundId = "rbxassetid://5433158470"
 
-    local spherePart = Instance.new("Part")
-    spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
-    spherePart.Shape = Enum.PartType.Ball
-    spherePart.Anchored = true
-    spherePart.CanCollide = false
-    spherePart.Material = Enum.Material.ForceField
-    spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-    spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
-    spherePart.Parent = workspace
+    -- Sphère de détection
+    local detectionSpherePart = Instance.new("Part")
+    detectionSpherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
+    detectionSpherePart.Shape = Enum.PartType.Ball
+    detectionSpherePart.Anchored = true
+    detectionSpherePart.CanCollide = false
+    detectionSpherePart.Material = Enum.Material.ForceField
+    detectionSpherePart.Color = Color3.new(0.2, 0.2, 0.5)
+    detectionSpherePart.Transparency = 0.95 -- Rend la sphère presque invisible
+    detectionSpherePart.Parent = workspace
+
+    -- Sphère de distance
+    local distanceSpherePart = Instance.new("Part")
+    distanceSpherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
+    distanceSpherePart.Shape = Enum.PartType.Ball
+    distanceSpherePart.Anchored = true
+    distanceSpherePart.CanCollide = false
+    distanceSpherePart.Material = Enum.Material.ForceField
+    distanceSpherePart.Color = Color3.new(0.5, 0.2, 0.2) -- Couleur pour la sphère de distance
+    distanceSpherePart.Transparency = 0.95 -- Rend la sphère presque invisible
+    distanceSpherePart.Parent = workspace
 
     local proximityIndicator = Instance.new("Part")
     proximityIndicator.Size = Vector3.new(5, 5, 5)
@@ -77,8 +89,6 @@ local function initializeParry()
             return 
         end
 
-        spherePart.Position = Player.Character.PrimaryPart.Position
-
         local playerPos = Player.Character.PrimaryPart.Position
         local targetPos = par.Position
 
@@ -86,91 +96,80 @@ local function initializeParry()
         local velocity = par.AssemblyLinearVelocity.Magnitude
 
         local maxDetectionRadius = velocity / 0.15
-        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius) 
+        local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius)
 
-        if distance <= adjustedBaseDetectionRadius then
-            local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-            spherePart.Size = Vector3.new(newSize * 1115.5, newSize * 1115.5, newSize * 1115.5) -- Augmenter le facteur d'échelle ici
+        -- Mettre à jour la taille de la sphère de détection
+        detectionSpherePart.Size = Vector3.new(adjustedBaseDetectionRadius * 2, adjustedBaseDetectionRadius * 2, adjustedBaseDetectionRadius * 2)
 
-            local hat = par.AssemblyLinearVelocity
-            if par:FindFirstChild('zoomies') then 
-                hat = par.zoomies.VectorVelocity
-            end
+        -- Mettre à jour la taille de la sphère de distance
+        local newDistanceSize = math.clamp(baseDetectionRadius + (baseDetectionRadius - distance) * 0.5, baseDetectionRadius, baseDetectionRadius * 2)
+        distanceSpherePart.Size = Vector3.new(newDistanceSize * 2, newDistanceSize * 2, newDistanceSize * 2)
 
-            local i = par.Position
-            local j = Player.Character.PrimaryPart.Position
-            local kil = (j - i).Unit
-            local l = Player:DistanceFromCharacter(i)
-            local m = kil:Dot(hat.Unit)
-            local n = hat.Magnitude
+        -- Positionner les sphères sur le joueur
+        detectionSpherePart.Position = Player.Character.PrimaryPart.Position
+        distanceSpherePart.Position = Player.Character.PrimaryPart.Position
 
-            -- Calculer le seuil basé sur la vitesse
-            local thresholdP = 0.50 * (1 + 0.15 * velocity)
+        -- Vérifier si la sphère de distance est plus grande ou égale à la sphère de détection
+        if distanceSpherePart.Size.Magnitude >= detectionSpherePart.Size.Magnitude then
+            if distance <= adjustedBaseDetectionRadius then
+                local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
+                detectionSpherePart.Size = Vector3.new(newSize * 1.5, newSize * 1.5, newSize * 1.5)
 
-            if m > 0 then
-                local o = l - 5
-                local p = o / n
+                local hat = par.AssemblyLinearVelocity
+                if par:FindFirstChild('zoomies') then 
+                    hat = par.zoomies.VectorVelocity
+                end
 
-                local closest_Entity = getClosestEntity()
-                if closest_Entity and parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
-                    local currentTime = tick()
-                    if currentTime - lastParryTime < parryInterval then
-                        -- Activer l'autospam si la fréquence est rapide
-                        autoSpamActive = true
-                        spamStartTime = currentTime
+                local i = par.Position
+                local j = Player.Character.PrimaryPart.Position
+                local kil = (j - i).Unit
+                local l = Player:DistanceFromCharacter(i)
+                local m = kil:Dot(hat.Unit)
+                local n = hat.Magnitude
+
+                -- Calculer le seuil basé sur la vitesse
+                local thresholdP = 0.50 * (1 + 0.15 * velocity)
+
+                if m > 0 then
+                    local o = l - 5
+                    local p = o / n
+
+                    local closest_Entity = getClosestEntity()
+                    if closest_Entity and parry_helper.IsPlayerTarget(par) and p <= thresholdP and not ero then
+                        local currentTime = tick()
+                        if currentTime - lastParryTime < parryInterval then
+                            -- Activer l'autospam si la fréquence est rapide
+                            autoSpamActive = true
+                            spamStartTime = currentTime
+                        end
+
+                        -- Utiliser le RemoteEvent pour le parry
+                        local cf = camera.CFrame
+                        local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
+
+                        hitremote:FireServer(
+                            0,
+                            CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
+                            {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
+                            {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
+                            false
+                        )
+                        detectionSpherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
+                        ero = true
+                        lastParryTime = currentTime
+                    else
+                        detectionSpherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                     end
-
-                    -- Utiliser le RemoteEvent pour le parry
-                    local cf = camera.CFrame
-                    local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
-
-                    hitremote:FireServer(
-                        0,
-                        CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
-                        {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-                        {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-                        false
-                    )
-                    spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
-                    ero = true
-                    lastParryTime = currentTime
                 else
-                    spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
+                    if ero then
+                        parrySound:Play()
+                        ero = false -- Réinitialiser ero pour permettre un nouveau parry
+                    end
                 end
+
+                proximityIndicator.Position = Player.Character.PrimaryPart.Position
             else
-                if ero then
-                    parrySound:Play()
-                    ero = false -- Réinitialiser ero pour permettre un nouveau parry
-                end
-            end
-
-            proximityIndicator.Position = Player.Character.PrimaryPart.Position
-        else
-            proximityIndicator.Position = Vector3.new(0, -1000, 0)
-        end
-
-        -- Gestion de l'autospam
-        if autoSpamActive then
-            local currentTime = tick()
-            if currentTime - spamStartTime < spamDuration then
-                -- Effectuer un parry automatique
-                local closest_Entity = getClosestEntity()
-                if closest_Entity then
-                    local cf = camera.CFrame
-                    local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
-
-                    hitremote:FireServer(
-                        0,
-                        CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
-                        {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-                        {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-                        false
-                    )
-                    wait()
-                end
-            else
-                autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
-                ero = false 
+                proximityIndicator.Position = Vector3.new(0, -1000, 0)
             end
         end
     end)
