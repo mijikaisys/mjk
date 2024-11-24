@@ -1,4 +1,4 @@
-etgenv().autoparry = true
+getgenv().autoparry = true
 
 local VirtualManager = game:GetService("VirtualInputManager")
 local Players = game:GetService('Players')
@@ -84,6 +84,10 @@ local function initializeParry()
             return 
         end
 
+        if not Player.Character or not Player.Character.PrimaryPart then
+            return -- S'assurer que le personnage et son PrimaryPart sont chargés
+        end
+
         local par = parry_helper.FindTargetBall()
         if not par then 
             return 
@@ -98,22 +102,31 @@ local function initializeParry()
         local maxDetectionRadius = velocity / 0.15
         local adjustedBaseDetectionRadius = math.clamp(baseDetectionRadius + (velocity * 0.2), baseDetectionRadius, maxDetectionRadius)
 
-        -- Mettre à jour la taille de la sphère de détection
-        detectionSpherePart.Size = Vector3.new(adjustedBaseDetectionRadius * 2, adjustedBaseDetectionRadius * 2, adjustedBaseDetectionRadius * 2)
+        -- Mettre à jour la taille de la sphère de détection avec interpolation
+        local currentDetectionSize = detectionSpherePart.Size.X / 2 -- Récupérer la taille actuelle
+        local targetDetectionSize = adjustedBaseDetectionRadius
+        local interpolationFactor = 0.1 -- Ajuste cette valeur pour contrôler la vitesse d'agrandissement
 
-        -- Mettre à jour la taille de la sphère de distance
-        local newDistanceSize = math.clamp(baseDetectionRadius + (baseDetectionRadius - distance) * 0.5, baseDetectionRadius, baseDetectionRadius * 2)
-        distanceSpherePart.Size = Vector3.new(newDistanceSize * 2, newDistanceSize * 2, newDistanceSize * 2)
+        -- Interpolation linéaire pour la taille de la sphère de détection
+        currentDetectionSize = currentDetectionSize + (targetDetectionSize - currentDetectionSize) * interpolationFactor
+        detectionSpherePart.Size = Vector3.new(currentDetectionSize * 1.3, currentDetectionSize * 1.3, currentDetectionSize * 1.3)
+
+        -- Ajuster la taille de la sphère de distance
+        local minDistanceSize = baseDetectionRadius * 2 -- Taille minimale
+        local maxDistanceSize = baseDetectionRadius * 5 -- Taille maximale
+        local newDistanceSize = math.clamp(maxDistanceSize - (distance * 0.5), minDistanceSize, maxDistanceSize) -- Ajuster en fonction de la distance
+        
+        distanceSpherePart.Size = Vector3.new(newDistanceSize, newDistanceSize, newDistanceSize)
 
         -- Positionner les sphères sur le joueur
-        detectionSpherePart.Position = Player.Character.PrimaryPart.Position
-        distanceSpherePart.Position = Player.Character.PrimaryPart.Position
+        detectionSpherePart.Position = playerPos
+        distanceSpherePart.Position = playerPos
 
         -- Vérifier si la sphère de distance est plus grande ou égale à la sphère de détection
         if distanceSpherePart.Size.Magnitude >= detectionSpherePart.Size.Magnitude then
             if distance <= adjustedBaseDetectionRadius then
                 local newSize = math.clamp(adjustedBaseDetectionRadius - (distance * 0.3), baseDetectionRadius, adjustedBaseDetectionRadius)
-                detectionSpherePart.Size = Vector3.new(newSize * 1.5, newSize * 1.5, newSize * 1.5)
+                detectionSpherePart.Size = Vector3.new(newSize * 1115.5, newSize * 1115.5, newSize * 1115.5)
 
                 local hat = par.AssemblyLinearVelocity
                 if par:FindFirstChild('zoomies') then 
