@@ -1,5 +1,6 @@
 getgenv().autoparry = true
 
+local a = game:GetService("VirtualInputManager")
 local VirtualManager = game:GetService("VirtualInputManager")
 local Players = game:GetService('Players')
 local Player = Players.LocalPlayer or Players.PlayerAdded:Wait()
@@ -124,13 +125,7 @@ local function initializeParry()
                     local cf = camera.CFrame
                     local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
 
-                    hitremote:FireServer(
-                        0,
-                        CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
-                        {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-                        {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-                        false
-                    )
+                    a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
                     lastParryTime = currentTime
@@ -159,13 +154,7 @@ local function initializeParry()
                     local cf = camera.CFrame
                     local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
 
-                    hitremote:FireServer(
-                        0,
-                        CFrame.new(x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22),
-                        {[closest_Entity.Name] = closest_Entity.HumanoidRootPart.Position},
-                        {closest_Entity.HumanoidRootPart.Position.X, closest_Entity.HumanoidRootPart.Position.Y},
-                        false
-                    )
+                    a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait()
                 end
             else
