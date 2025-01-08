@@ -131,6 +131,7 @@ local function initializeParry()
                     lastParryTime = currentTime
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
+                    wait(0.10)
                 end
             else
                 if ero then
