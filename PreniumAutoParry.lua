@@ -26,7 +26,7 @@ local function initializeParry()
     local spamDuration = 0.260 -- Durée pendant laquelle l'autospam est actif
 
     local parrySound = Instance.new("Sound", Player.Character)
-    parrySound.SoundId = "rbxassetid://5433158470"
+    parrySound.SoundId = ""
 
     local spherePart = Instance.new("Part")
     spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
