@@ -1,40 +1,53 @@
-local a = game:GetService("VirtualInputManager")
-local b = game:GetService("RunService")
-local c = game:GetService("Players").LocalPlayer
-local d = loadstring(game:HttpGet("https://raw.githubusercontent.com/DenDenZYT/DenDenZ-s-Open-Source-Collection/main/Component"))() 
+local RunService = game:GetService("RunService") or game:FindFirstDescendant("RunService")
+local Players = game:GetService("Players") or game:FindFirstDescendant("Players")
+local VirtualInputManager = game:GetService("VirtualInputManager") or game:FindFirstDescendant("VirtualInputManager")
 
-local e = false
+local Player = Players.LocalPlayer
 
-spawn(function()
-    b.PreRender:Connect(function()
-        if not getgenv().f then return end
+local Cooldown = tick()
+local IsParried = false
+local Connection = nil
 
-        local g = d.FindTargetBall()
-        if not g then return end
+local function GetBall()
+  for _, Ball in ipairs(workspace.Balls:GetChildren()) do
+    if Ball:GetAttribute("realBall") then
+      return Ball
+    end
+  end
+end
 
-        local h = g.AssemblyLinearVelocity
-        if g:FindFirstChild('zoomies') then 
-            h = g.zoomies.VectorVelocity
-        end
+local function ResetConnection()
+    if Connection then
+        Connection:Disconnect()
+        Connection = nil
+    end
+end
 
-        local i = g.Position
-        local j = c.Character.PrimaryPart.Position
-        local k = (j - i).Unit
-        local l = c:DistanceFromCharacter(i)
-        local m = k:Dot(h.Unit)
-        local n = h.Magnitude
-
-        if m > 0 then
-            local o = l - 5
-            local p = o / n
-
-            if d.IsPlayerTarget(g) and p <= 0.55 and not e then
-                a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                wait(0.01)
-                e = true
-            end
-        else
-            e = false
-        end
+workspace.Balls.ChildAdded:Connect(function()
+    local Ball = GetBall()
+    if not Ball then return end
+    ResetConnection()
+    Connection = Ball:GetAttributeChangedSignal("target"):Connect(function()
+        Parried = false
     end)
+end)
+
+RunService.PreSimulation:Connect(function()
+    local Ball, HRP = GetBall(), Player.Character.HumanoidRootPart
+    if not Ball or not HRP then
+      return
+    end
+    
+    local Speed = Ball.zoomies.VectorVelocity.Magnitude
+    local Distance = (HRP.Position - Ball.Position).Magnitude
+    
+    if Ball:GetAttribute("target") == Player.Name and not Parried and Distance / Speed <= 0.55 then
+      VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)
+      Parried = true
+      Cooldown = tick()
+      
+      if (tick() - Cooldown) >= 1 then
+        Partied = false
+      end
+    end
 end)
