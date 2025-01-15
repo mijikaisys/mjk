@@ -1,20 +1,10 @@
 getgenv().autoparry = true
 
 local a = game:GetService("VirtualInputManager")
-local VirtualManager = game:GetService("VirtualInputManager")
 local Players = game:GetService('Players')
 local Player = Players.LocalPlayer or Players.PlayerAdded:Wait()
 local RunService = game:GetService('RunService')
 local parry_helper = loadstring(game:HttpGet("https://raw.githubusercontent.com/TripleScript/TripleHub/main/helper_.lua"))()
-
--- Détection du RemoteEvent
-local hitremote
-for _, v in next, game:GetDescendants() do
-    if v and v.Name:find("\n") and v:IsA("RemoteEvent") then
-        hitremote = v
-        break
-    end
-end
 
 local function initializeParry()
     local ero = false
@@ -24,9 +14,6 @@ local function initializeParry()
     local autoSpamActive = false
     local spamStartTime = 0
     local spamDuration = 0.260 -- Durée pendant laquelle l'autospam est actif
-
-    local parrySound = Instance.new("Sound", Player.Character)
-    parrySound.SoundId = ""
 
     local spherePart = Instance.new("Part")
     spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
@@ -121,23 +108,18 @@ local function initializeParry()
                         spamStartTime = currentTime
                     end
 
-                    -- Utiliser le RemoteEvent pour le parry
-                    local cf = camera.CFrame
-                    local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
-
+                    -- Effectuer le parry
                     a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     spherePart.Color = Color3.new(0, 1, 0) -- Indicate parry successful
                     ero = true
                     lastParryTime = currentTime
+                    wait(0.10)
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
                     wait(0.10)
                 end
             else
-                if ero then
-                    parrySound:Play()
-                    ero = false -- Réinitialiser ero pour permettre un nouveau parry
-                end
+                ero = false -- Réinitialiser ero pour permettre un nouveau parry
             end
 
             proximityIndicator.Position = Player.Character.PrimaryPart.Position
@@ -152,9 +134,6 @@ local function initializeParry()
                 -- Effectuer un parry automatique
                 local closest_Entity = getClosestEntity()
                 if closest_Entity then
-                    local cf = camera.CFrame
-                    local x, y, z, R00, R01, R02, R10, R11, R12, R20, R21, R22 = cf:GetComponents()
-
                     a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
                     wait()
                 end
