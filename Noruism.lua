@@ -1,5 +1,3 @@
-local AutoPary = loadstring(game:HttpGet("https://github.com/mijikaisys/mjk/blob/main/NoruismAp.lua"))()
-
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 
 -- Création de la fenêtre principale
