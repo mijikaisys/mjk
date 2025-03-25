@@ -17,7 +17,7 @@ local MainTab = Window:AddTab({ Title = "Main", Icon = "" })
 
 -- **Bouton qui exécute un loadstring et affiche une notification**
 MainTab:AddButton({
-    Title = "AutoParry",
+    Title = "AutoParry Click Once!",
     Description = "AutoParry can't be truned off (for now)",
     Callback = function()
         Fluent:Notify({
