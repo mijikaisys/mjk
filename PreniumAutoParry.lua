@@ -22,7 +22,7 @@ local function initializeParry()
     spherePart.CanCollide = false
     spherePart.Material = Enum.Material.ForceField
     spherePart.Color = Color3.new(0.2, 0.2, 0.5)
-    spherePart.Transparency = 0.95 -- Rend la sphère presque invisible
+    spherePart.Transparency = 1 -- Rend la sphère presque invisible
     spherePart.Parent = workspace
 
     local proximityIndicator = Instance.new("Part")
