@@ -1,4 +1,4 @@
-
+loadstring(game:HttpGet("https://github.com/mijikaisys/mjk/blob/main/NoruismAp.lua"))()
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 
 -- Création de la fenêtre principale
@@ -26,7 +26,6 @@ MainTab:AddButton({
             Duration = 3
         })
         loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/PreniumAutoParry.lua"))()
-        loadstring(game:HttpGet("https://github.com/mijikaisys/mjk/blob/main/NoruismAp.lua"))()
     end
 })
 
