@@ -117,7 +117,7 @@ local function initializeParry()
                     wait()
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
-                    wait(0.10)
+                    wait(0.010)
                 end
             else
                 ero = false -- Réinitialiser ero pour permettre un nouveau parry
