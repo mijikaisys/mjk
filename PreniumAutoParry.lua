@@ -13,7 +13,7 @@ local function initializeParry()
     local parryInterval = 0.252 -- Intervalle en secondes entre chaque parry
     local autoSpamActive = false
     local spamStartTime = 0
-    local spamDuration = 0.260 -- Durée pendant laquelle l'autospam est actif
+    local spamDuration = 0.300 -- Durée pendant laquelle l'autospam est actif
 
     local spherePart = Instance.new("Part")
     spherePart.Size = Vector3.new(baseDetectionRadius * 2, baseDetectionRadius * 2, baseDetectionRadius * 2)
@@ -32,7 +32,8 @@ local function initializeParry()
     proximityIndicator.CanCollide = false 
     proximityIndicator.Color = Color3.new(0, 0, 0)
     proximityIndicator.Parent = workspace
-
+    proximityIndicator.Transparency = 1
+    
     local camera = workspace.CurrentCamera
     local mouse = Player:GetMouse()
 
