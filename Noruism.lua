@@ -54,14 +54,7 @@ local Slider = MainTab:AddSlider("MySlider", {
     Min = 0,
     Max = 10,
     Default = 3,
-    Rounding = 1, -- Pour éviter les nombres à virgule si non voulu
-    Callback = function(Value)
-        Fluent:Notify({
-            Title = "Slider",
-            Content = "Valeur du slider : " .. Value,
-            Duration = 0
-        })
-    end
+    Rounding = 1
 })
 
 Slider:OnChanged(function(Value)
