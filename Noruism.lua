@@ -25,7 +25,7 @@ MainTab:AddButton({
             Content = "AutoParry is ON...",
             Duration = 3
         })
-        loadstring(game:HttpGet("https://your-script-url.com/script.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/mijikaisys/mjk/refs/heads/main/PreniumAutoParry.lua"))()
     end
 })
 
