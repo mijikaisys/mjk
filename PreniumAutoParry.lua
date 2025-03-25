@@ -117,7 +117,7 @@ local function initializeParry()
                     wait()
                 else
                     spherePart.Color = Color3.new(1, 0, 0) -- Indicate parry failed
-                    wait(0.050)
+                    wait(0.090)
                 end
             else
                 ero = false -- Réinitialiser ero pour permettre un nouveau parry
@@ -136,7 +136,6 @@ local function initializeParry()
                 local closest_Entity = getClosestEntity()
                 if closest_Entity then
                     a:SendMouseButtonEvent(0, 0, 0, true, game, 0)
-                    wait()
                 end
             else
                 autoSpamActive = false -- Désactiver l'autospam après la durée spécifiée
